@@ -1,0 +1,22 @@
+.* 可以匹配0~n个
+所以用递归的方法分别判断匹配0个，匹配1个，匹配2个的情况。
+
+
+别人代码如下：
+bool isMatch(const char *s, const char *p) {
+    assert(s && p);
+    if (*p == '\0') return *s == '\0';
+
+    // next char is not '*': must match current character          情况1，没有*
+    if (*(p+1) != '*') {
+        assert(*p != '*');
+        return ((*p == *s) || (*p == '.' && *s != '\0')) && isMatch(s+1, p+1);
+    }
+	
+    // next char is '*'                                             情况2，有*
+    while ((*p == *s) || (*p == '.' && *s != '\0')) {
+        if (isMatch(s, p+2)) return true;
+        s++;
+    }
+    return isMatch(s, p+2);
+}
