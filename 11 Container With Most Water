@@ -1,0 +1,19 @@
+public class Solution {
+    public int maxArea(int[] height) {
+        int maxarea = 0;
+        int index1=0; 
+        int index2=height.length - 1;
+        while(index2>index1){
+            int area = (index2-index1)*Math.min(height[index1], height[index2]);
+            if(area>maxarea)
+                maxarea = area;
+            if(height[index1]<height[index2])
+                index1++;
+            else
+                index2--;
+        }
+        return maxarea;
+    }
+}
+两个指针分别从两端开始移动，每次选短的向中间移动。
+贪心算法
