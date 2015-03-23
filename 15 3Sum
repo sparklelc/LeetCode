@@ -1,0 +1,33 @@
+public class Solution {
+    public List<List<Integer>> threeSum(int[] num) {
+        Arrays.sort(num);
+        List li = new ArrayList<List<Integer>>();
+        for(int i=0; i<num.length-2;i++){
+            if(i!=0 && num[i-1]==num[i])
+                continue;
+            int l = i+1;
+            int r = num.length - 1;
+            while(l<r){
+                if(num[l]+num[r]+num[i]==0){
+                    li.add(Arrays.asList(num[i],num[l],num[r]));
+                    r--;
+                    l++;
+                    while(l<r && num[l]==num[l-1]){
+                        l++;
+                    }
+                    while(l<r && num[r]==num[r+1]){
+                        r--;
+                    }
+                }
+                else if(num[l]+num[r]+num[i]<0){
+                    l++;
+                }
+                else{
+                    r--;
+                }
+            }
+        }
+        return li;
+    }
+}
+一定要先排序，因为本身题目也是要求要排序输出的，排序完以后用两个指针很容易做
