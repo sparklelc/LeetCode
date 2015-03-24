@@ -1,0 +1,69 @@
+网上有人用PriorityQueue来做。
+
+
+我的解决方法：  /*...*/部分里面是原来的解决方法， 原来的解决方法是每次找所有元素里面的最小元素
+                新方法是将所有元素放到一个list里面，排序完以后再分装成Node.
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode mergeKLists(List<ListNode> lists) {
+        ListNode head = new ListNode(0);
+        ListNode tem = head;
+        List<Integer> list = new ArrayList<Integer>();
+        for(ListNode li:lists){
+            ListNode temno = li;
+            while(temno!=null){
+                list.add(new Integer(temno.val));
+                temno=temno.next;
+            }
+        }
+        if(list.size()==0) return null;
+        Integer[] arr = ((Integer[]) list.toArray(new Integer[list.size()]));
+        Arrays.sort(arr);
+        for(int i=0;i<arr.length;i++){
+            ListNode temnode = new ListNode(arr[i]);
+            tem.next = temnode;
+            tem = tem.next;
+        }
+        /*
+        ListNode head = new ListNode(0);
+        ListNode ptr = head;
+        int listnum = lists.size();
+        ListNode[] ptrnode = new ListNode[listnum];
+        int j=0;
+        for(ListNode li:lists){
+            ptrnode[j] = li;
+            j++;
+        }
+        while(true){
+            int index = -1;
+            int temmin = Integer.MAX_VALUE;
+            int temindex = 0;
+            for(ListNode i:ptrnode){
+                if(i!=null && i.val<temmin){
+                    index = temindex;
+                    temmin = i.val;
+                }
+                temindex++;
+            }
+            if(index!=-1){
+                ptr.next = ptrnode[index];
+                ptrnode[index] = ptrnode[index].next;
+            }
+            else{
+                break;
+            }
+        }
+        */
+        return head.next;
+    }
+}
