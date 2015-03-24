@@ -1,0 +1,44 @@
+<<      :     左移运算符，num << 1,相当于num乘以2
+>>      :     右移运算符，num >> 1,相当于num除以2,   对于负数的话如1000 0010这个数右移一位后是1100 0001
+>>>    :     无符号右移，忽略符号位，空位都以0补齐
+
+例如 1111除以 101， 把101左移若干位变成10100，10100刚好大于1111。开始向后移，再移成1010，1111大于1010，故二进制第二位为1。
+     再移成101，1111-1010=101，101>=101，故二进制第一位为1。所以结果为11。
+
+（注意，这里对Int_max 有要求，所以转成long来做）
+（另外，>>=的结果是int 类型的，要转成long要用(long)）
+
+参照网上，我的解法：
+public class Solution {
+    public int divide(int dividend, int divisor) {
+        long dividend2 = dividend;
+        long divisor2 = divisor;
+        if(divisor2 == 0) return Integer.MAX_VALUE;
+        boolean neg = ((divisor2>0&&dividend2<0)||(divisor2<0&&dividend2>0))? true:false;
+        
+        dividend2 = Math.abs((long)dividend2);
+        divisor2 = Math.abs((long)divisor2);
+        if(divisor2>dividend2) return 0;
+        
+        long result=0;
+        int largetime=0;
+        while(divisor2<=(dividend2>>1)){
+            largetime++;
+            divisor2 = divisor2<<1;
+        }
+        while(largetime>=0){
+            if(dividend2>=divisor2){
+                result += ((long)1<<largetime);
+                dividend2 -= divisor2;
+            }
+            largetime--;
+            divisor2 = divisor2>>1;
+        }
+        result = neg? -result:result;
+        if(result>(long)Integer.MAX_VALUE)
+            return Integer.MAX_VALUE;
+        if(result<(long)Integer.MIN_VALUE)
+            return Integer.MIN_VALUE;
+        return (int)result;
+    }
+}
