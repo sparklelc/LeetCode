@@ -1,0 +1,41 @@
+把短词都存到hashmap里，对应的value为该词出现的次数，通过指针移位判断hashmap是否存在该短句，
+这样在S的substring里找该词是否存在的时间复杂度只有O(1),如果用substring和L[]里一一找，时间复杂度有O(n)
+
+最精华的地方在于使用equals来判断两个hashmap是否相同，匹配到一个词组后不是把原来的hashmap的值减一，而是把新hashmap的值
+加一，然后判断原来和新hashmap是否一致。
+
+参照网上做法，我的程序：
+public class Solution {
+    public List<Integer> findSubstring(String S, String[] L) {
+        HashMap<String,Integer> map = new HashMap<String, Integer>();
+        LinkedList<Integer> li = new LinkedList<Integer>();
+        int len = L[0].length();
+        for(int i = 0; i<L.length; i++){
+            if(map.containsKey(L[i]))
+                map.put(L[i], map.get(L[i])+1);
+            else
+                map.put(L[i], 1);
+        }
+        for(int i=0; i<=S.length()-L.length*len; i++){
+            if(map.containsKey(S.substring(i,i+len))){
+                HashMap<String,Integer> newmap = new HashMap<String, Integer>();
+                for(int j=0; j<L.length; j++){
+                    String word = S.substring(i+j*len, i+j*len+len);
+                    if(map.containsKey(word)){
+                        if(newmap.containsKey(word)){
+                            newmap.put(word, newmap.get(word)+1);
+                        }
+                        else
+                            newmap.put(word,1);
+                    }
+                    else
+                        break;
+                }
+                if(map.equals(newmap)){             //好想法！！！！！！
+                    li.add(i);
+                }
+            }
+        }
+        return li;
+    }
+}
