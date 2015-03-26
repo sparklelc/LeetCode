@@ -1,0 +1,31 @@
+括号匹配，根本思想在于：右括号数目小于等于左括号。
+用stack把左括号位置压栈，用boolean数组来记录符合要求的位置。
+
+public class Solution {
+    public int longestValidParentheses(String s) {
+        boolean[] bool = new boolean[s.length()];
+        LinkedList<Integer> list = new LinkedList<Integer>();
+        for(int i=0;i<s.length();i++){
+            if(s.charAt(i)=='(')
+                list.addFirst(i);
+            else if(s.charAt(i)==')' && list.size()>=1){
+                bool[(Integer)list.getFirst()]=true;
+                bool[i]=true;
+                list.removeFirst();
+            }
+        }
+        int max = 0;
+        for(int i=0; i<s.length(); i++){
+            int tem = 0;
+            int index = i;
+            while(index<s.length() && bool[index]==true){
+                tem++;
+                index++;
+            }
+            if(tem>max)
+                max=tem;
+        }
+        return max;
+    }
+
+}
