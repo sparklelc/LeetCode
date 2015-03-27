@@ -1,0 +1,26 @@
+和34题类似，找出A[start]<target<=A[end]且刚好end-start=1的那个位置
+
+
+我的代码如下：
+public class Solution {
+    public int searchInsert(int[] A, int target) {
+        if(A[0]>=target)
+            return 0;    
+        else if(target>A[A.length-1])
+            return A.length;
+        return insert(A, target, 0, A.length-1);
+    }
+    
+    public int insert(int[] A, int target, int start, int end){
+        //A[start]<[]<=A[end]
+        if(end-start==1)
+            return end;
+        int mid = (start + end)/2;
+        if(target<=A[mid])
+            return insert(A, target, start, mid);
+        else
+            return insert(A, target, mid, end);
+        
+    }
+    
+}
