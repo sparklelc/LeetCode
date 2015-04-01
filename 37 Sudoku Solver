@@ -1,0 +1,10 @@
+解数读题目：
+主要利用回溯‘backtracking’ 和 ‘DFS’ 的方法
+
+利用dfs向深处搜索，如果搜索结果不满足数读的规则，回溯跳回上一层，继续搜索。
+主要就两个函数，check()检查结果时候满足数读条件，dfs()用于向下搜索。
+
+有人用以下方式简化check()，如row[1][1]=true表示第一行的数字‘1’已经出现过。
+boolean[][] row = new boolean[9][9];
+boolean[][] col = new boolean[9][9];
+boolean[][] blo = new boolean[9][9];
