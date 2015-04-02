@@ -1,0 +1,73 @@
+题目：
+For example, given candidate set 10,1,2,7,6,1,5 and target 8, 
+A solution set is: 
+[1, 7] 
+[1, 2, 5] 
+[2, 6] 
+[1, 1, 6]
+
+我用Queue来实现BFS，网上有人用DFS,递归。
+我的代码如下：
+public class Solution {
+    public List<List<Integer>> combinationSum2(int[] num, int target) {
+        LinkedList<LinkedList<Integer>> finallist = new LinkedList<LinkedList<Integer>>();
+        Arrays.sort(num);
+        
+        LinkedList<LinkedList<Integer>> list = new LinkedList<LinkedList<Integer>>();
+        LinkedList<Integer> left = new LinkedList<Integer>();
+        LinkedList<Integer> index = new LinkedList<Integer>();
+        for(int i=0; i<num.length;){
+            if(target > num[i]){
+                LinkedList<Integer> temlist = new LinkedList<Integer>();
+                temlist.addLast(num[i]);
+                
+                list.addLast(temlist);
+                left.addLast(target-num[i]);
+                index.addLast(i+1);
+            }
+            else if(target == num[i]){
+                LinkedList<Integer> temlist = new LinkedList<Integer>();
+                temlist.addLast(num[i]);
+                
+                finallist.addLast(temlist);
+            }
+            else
+                break;
+            i++;
+            while(i<num.length && num[i-1] == num[i])
+                i++;
+        }
+        
+        while(list.size() != 0){
+            LinkedList<Integer> temlist = list.getFirst();
+            list.removeFirst();
+            int temleft = left.getFirst();
+            left.removeFirst();
+            int temindex = index.getFirst();
+            index.removeFirst();
+        
+            for(int i=temindex; i<num.length;){
+                if(temleft > num[i]){
+                    LinkedList<Integer> temtemlist = new LinkedList<Integer>(temlist);
+                    temtemlist.addLast(num[i]);
+                    
+                    list.addLast(temtemlist);
+                    left.addLast(temleft-num[i]);
+                    index.addLast(i+1);
+                }
+                else if(temleft == num[i]){
+                    LinkedList<Integer> temtemlist = new LinkedList<Integer>(temlist);
+                    temtemlist.addLast(num[i]);
+                    
+                    finallist.addLast(temtemlist);
+                }
+                else
+                    break;
+                i++;
+                while(i<num.length && num[i-1] == num[i])
+                    i++;
+            }
+        }
+        return (List)finallist;
+    }
+}
