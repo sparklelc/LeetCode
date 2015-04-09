@@ -1,0 +1,41 @@
+我的想法使用DFS+回溯来做。
+
+我的代码如下：
+public class Solution {
+    public List<List<Integer>> permuteUnique(int[] num) {
+        Arrays.sort(num);
+        LinkedList<LinkedList<Integer>> result = new LinkedList<LinkedList<Integer>>();
+        boolean[] used = new boolean[num.length];
+        
+        LinkedList<Integer> temlist = new LinkedList<Integer>();
+        result.addLast(temlist);
+        bfs(used, result, num);
+        
+        return (List)result;
+    }
+    public void bfs(boolean[] used, LinkedList<LinkedList<Integer>> result, int[] num){
+        int tem = Integer.MAX_VALUE;
+        LinkedList<Integer> temlist = result.getLast();
+        result.removeLast();
+        boolean change = false;
+        
+        for(int i=0; i<num.length; i++){
+            if(!used[i] && num[i]!= tem){
+                used[i] = true;
+
+                LinkedList<Integer> newlist = new LinkedList<Integer>(temlist);
+                newlist.addLast(num[i]);
+                result.addLast(newlist);
+                bfs(used, result, num);
+
+                used[i] = false;                
+                tem = num[i];
+                change = true;
+            }
+                
+        }
+        if(!change)
+            result.addLast(temlist);
+
+    }
+}
