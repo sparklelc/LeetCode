@@ -1,0 +1,27 @@
+基本思想，冒泡把数字移动到相应的位置，找出第一个不符合要求的数字：
+
+注意：发生移动后，不要立即i++，要从当前位置继续。
+
+参照网上的思想，我的代码：
+public class Solution {
+    public int firstMissingPositive(int[] A) {
+        for(int i=0; i<A.length; i++){
+            if(A[i]>0 && A[i]<=A.length && A[i]!=A[A[i]-1]){
+                swap(i, A[i]-1, A);
+                i--;
+            }
+        }
+        int i=0;
+        for(; i<A.length; i++){
+            if(A[i] != i+1)
+                return i+1;
+        }
+        return i+1;
+    }
+    
+    public void swap(int index1, int index2, int[] A){
+        int tem = A[index1];
+        A[index1] = A[index2];
+        A[index2] = tem;
+    }
+} 
