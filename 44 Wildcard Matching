@@ -1,0 +1,42 @@
+题目：字符串匹配问题， 
+'?' Matches any single character.
+'*' Matches any sequence of characters (including the empty sequence).可以是“abcd”
+
+这题和之前的"." "*"匹配问题有点不同，这里的'*'可以匹配不同的字母组成的字符串，所以思路其实就是找s字符串中时候有p字符串里
+的非"*"元素，如“aaabbbbccc”，“a*b*c*”，两个指针，只要发现字符串中有abc子序列就可以，所以可以从左到右按顺序找，记录上一次“*”出现的
+位置。
+
+
+
+网上别人的代码：
+boolean comparison(String str, String pattern) {
+        int s = 0, p = 0, match = 0, starIdx = -1;            
+        while (s < str.length()){
+            // advancing both pointers
+            if (p < pattern.length()  && (pattern.charAt(p) == '?' || str.charAt(s) == pattern.charAt(p))){
+                s++;
+                p++;
+            }
+            // * found, only advancing pattern pointer
+            else if (p < pattern.length() && pattern.charAt(p) == '*'){
+                starIdx = p;
+                match = s;
+                p++;
+            }
+           // last pattern pointer was *, advancing string pointer
+            else if (starIdx != -1){
+                p = starIdx + 1;
+                match++;
+                s = match;
+            }
+           //current pattern pointer is not star, last patter pointer was not *
+          //characters do not match
+            else return false;
+        }
+
+        //check for remaining characters in pattern
+        while (p < pattern.length() && pattern.charAt(p) == '*')
+            p++;
+
+        return p == pattern.length();
+}
