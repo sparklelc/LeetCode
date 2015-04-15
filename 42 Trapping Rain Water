@@ -1,0 +1,48 @@
+思想：找出每个位置上的左边最大值和右边的最大值，用俩个矩阵分别存储，那么该点上的蓄水量由这两边的值所决定。
+该算法的时间复杂度为O(n)。
+
+参考网上代码，我的代码如下：
+public class Solution {
+    public int trap(int[] A) {
+        int sum = 0;
+        if(A.length == 0) return sum;
+        int[] left = new int[A.length];
+        int[] right = new int[A.length];
+        left = findLeftMax(A);
+        right = findRightMax(A);
+
+        for(int i=0; i<A.length; i++){
+            if(A[i]>=left[i] || A[i]>=right[i])
+                continue;
+            int max= Math.min(left[i], right[i]);
+            sum += max-A[i];
+        }
+        return sum;
+    }
+    
+    public int[] findLeftMax(int[] A){
+        int[] left = new int[A.length];
+        int max = 0;
+        left[0] = 0;
+        for(int i=1; i<A.length; i++){
+            if(A[i-1]>max){
+                max = A[i-1];
+            }
+            left[i] = max;
+        }
+        return left;
+    }
+    
+    public int[] findRightMax(int[] A){
+        int[] right = new int[A.length];
+        int max =0;
+        right[A.length-1]=0;
+        for(int i=A.length-2; i>=0; i--){
+            if(A[i+1]>max)
+                max = A[i+1];
+            right[i] = max;
+        }
+        return right;
+    }
+    
+}
