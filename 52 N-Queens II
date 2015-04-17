@@ -1,0 +1,44 @@
+和上一题类似,参照上一题别人的代码
+
+我的代码,在eclipse能通过，但在leetcode上的结果和eclipse的结果不同。
+可能leetcode的编译器的问题，可能是开了优化
+
+public class Solution {
+    public static int totalnum = 0;
+    public int totalNQueens(int n) {
+        boolean[] col = new boolean[n];
+        boolean[] left = new boolean[2*n-1];
+        boolean[] right = new boolean[2*n-1];
+        boolean[][] map = new boolean[n][];
+        for(int i=0; i<n; i++)
+            map[i] = new boolean[n];
+
+        dfs(n, map, col, left, right, 0);
+        
+        return totalnum;
+    }
+    public void dfs(int n, boolean[][] map, boolean[] col, boolean[] left, boolean[] right, int vol){
+        if(vol == n){
+            totalnum += 1;
+        }
+        for(int j=0; j<n; j++){
+            if(col[j])
+                continue;
+            map[vol][j] = true;
+            if(!left[n-1-vol+j] && !right[vol+j]){
+                left[n-1-vol+j] = true;
+                right[vol+j] = true;
+                col[j] = true;
+                vol++;
+                
+                dfs(n, map, col, left, right, vol);
+                
+                vol--;
+                col[j] = false;
+                left[n-1-vol+j] = false;
+                right[vol+j] = false; 
+            }
+            map[vol][j] = false;
+        }
+    }
+}
