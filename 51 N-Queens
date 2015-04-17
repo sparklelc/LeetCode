@@ -1,0 +1,98 @@
+思路:回溯+DFS
+
+
+我的代码：
+缺点：应该用col[], d1[], d2[] 来记录每个竖直，左斜，右斜方向上是否已经有元素。
+public class Solution {
+    public List<String[]> solveNQueens(int n) {
+        boolean[][] map = new boolean[n][];
+        for(int i=0; i<n; i++)
+            map[i] = new boolean[n];
+        LinkedList<String[]> result = new LinkedList<String[]>();
+        dsp(result, map, 0, n);
+        return result;
+    }
+    
+    public void dsp(LinkedList<String[]> result, boolean[][] map, int index, int n){
+        if(index == n){
+            StringBuffer tembuffer = new StringBuffer();
+            String[] oneresult = new String[n];
+            for(int i=0; i<n; i++){
+                tembuffer.append('.');
+            }
+            for(int i=0; i<n; i++){
+                int j=0;
+                for(; j<n; j++){
+                    if(map[i][j])
+                        break;
+                }
+                tembuffer.setCharAt(j, 'Q');
+                oneresult[i] = new String(tembuffer);
+                tembuffer.setCharAt(j, '.');
+            }
+            result.addLast(oneresult);
+            return;
+        }
+            
+        for(int i=0; i<n; i++){
+            map[index][i] = true;
+            if(!fit(map, n, index, i)){
+                map[index][i] = false;
+                continue;
+            }
+            index++;
+            dsp(result, map, index, n);
+            index--;
+            map[index][i] = false;
+            
+        }
+    }
+    
+    public boolean fit(boolean[][] map, int n, int hang, int lie){
+
+        int hangtimes = 0;
+        int lietimes = 0;
+        for(int j=0; j<n; j++){
+            if(map[hang][j])
+                hangtimes++;
+            if(map[j][lie])
+                lietimes++;
+            if(hangtimes>=2 || lietimes>=2)
+                return false;
+        }
+
+        
+        int temhang = hang;
+        int temlie = lie;
+        while(temhang!=0 && temlie!=0){
+            temhang--;
+            temlie--;
+        }
+        int times = 0;
+        for(int i=0; i<n-Math.abs(temhang-temlie); i++){
+            if(map[temhang][temlie])
+                times++;
+            if(times>=2)
+                return false;
+            temhang++;
+            temlie++;
+        }
+        
+        temhang = hang;
+        temlie = lie;
+        while(temhang!=n-1 && temlie!= 0){
+            temhang++;
+            temlie--;
+        }
+        times = 0;
+        for(int i=0; i<n-Math.abs(temhang+temlie-n+1); i++){
+            if(map[temhang][temlie])
+                times++;
+            if(times>=2)
+                return false;
+            temhang--;
+            temlie++;
+        }
+        return true;
+    }
+}
