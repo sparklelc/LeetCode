@@ -1,0 +1,50 @@
+合并区间
+Given [1,3],[2,6],[8,10],[15,18],
+return [1,6],[8,10],[15,18].
+
+
+我的代码：用两个数组分别存放start[]和end[]，每次判断start和end哪个大
+
+/**
+ * Definition for an interval.
+ * public class Interval {
+ *     int start;
+ *     int end;
+ *     Interval() { start = 0; end = 0; }
+ *     Interval(int s, int e) { start = s; end = e; }
+ * }
+ */
+public class Solution {
+    public List<Interval> merge(List<Interval> intervals) {
+        Interval[] inter = intervals.toArray(new Interval[intervals.size()]);
+        LinkedList<Interval> result = new LinkedList<Interval>();
+        int[] startarr = new int[inter.length];
+        int[] endarr = new int[inter.length];
+        if(inter.length == 0) return result;
+        
+        for(int i=0; i<inter.length; i++){
+            startarr[i] = inter[i].start;
+            endarr[i] = inter[i].end;
+        }
+        Arrays.sort(startarr);
+        Arrays.sort(endarr);
+        
+        int startindex = 0;
+        int endindex = 0;
+        int temstartindex;
+        while(true){
+            temstartindex = startindex + 1;
+            while(temstartindex < inter.length && endarr[endindex] >= startarr[temstartindex]){
+                endindex++;
+                temstartindex++;
+            }
+            result.addLast(new Interval(startarr[startindex], endarr[endindex]));
+            startindex = temstartindex;
+            endindex++;
+            if(temstartindex == inter.length)
+                break;
+            
+        }
+        return (List)result;
+    }
+}
