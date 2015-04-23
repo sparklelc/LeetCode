@@ -1,0 +1,62 @@
+我的思路：
+1. "123"
+2. "132"
+3. "213"
+4. "231"
+5. "312"
+6. "321"
+比如取n=3,中的第三个数k=3
+则（k-1)/(n-1)!+1= 3/2 + 1 =2， 故第一个数字是二
+然后在判断后面的数字
+
+
+网上别人的思路：
+假设集合为[1,2,3,4]，求出第6个组合。
+第6个组合对应的下标为5（下标从0开始），我们首先求出5所对应的lehmer码（lehmer code的解释参考链接1）：
+5/3! = 0 余5
+5/2! = 2 余1
+1/1! = 1 余0
+0 (lehmer code最后一位总为0)
+所以所求lehmer码为0210
+
+当前集合对应的序列为1234
+接下来将lehmer码中的每个数字当做当前序列的下标，下标0对应的集合元素为1，当前序列变成234；下标2对应的集合元素为4，当前序列变成23；下标1对应的集合元素为3，当前序列变成2；下标0对应的元素为2
+所以所求的组合即为1432
+
+
+和我的思路差不多，不过它的更清晰简洁：
+我的代码如下：
+public class Solution {
+    public String getPermutation(int n, int k) {
+        StringBuffer result = new StringBuffer();
+        boolean[] used = new boolean[n];
+        
+        getP(n, k, 0, used, result);
+        return new String(result);
+    }
+    
+    public void getP(int n, int k, int index, boolean[] used, StringBuffer result){
+	        if(index == n)
+	            return;
+	        int totalnum = 1;
+	        for(int i=2; i<=n-index; i++){
+	            totalnum *= i;
+	        }
+	        int lastnum = totalnum/(n-index);
+	        int times = (k-1) / lastnum + 1;
+	        int temtimes = times;
+	        int charOfThisIndex = -1;
+        
+        for(int newindex = 0; temtimes!=0; newindex++){
+            if(used[newindex])
+                continue;
+            else{
+                charOfThisIndex = newindex;
+                temtimes--;
+            }
+        }
+        result.append((char)(charOfThisIndex+'1'));
+        used[charOfThisIndex] = true;
+        getP(n, k-(times-1)*lastnum, ++index, used, result);
+    }
+}
