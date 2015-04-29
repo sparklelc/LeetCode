@@ -1,0 +1,41 @@
+链表移动题目：
+
+
+我的思路：
+两个指针，knode和lastnode，指向倒数k位和最后一位，每次将两个指针向后移动
+如果k的数值大于链表的长度，那么第一次遍历可得到链表的长度，通过此可计算得到要多少次循环，然后可将指针直接移动到相应位置。
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode rotateRight(ListNode head, int k) {
+        if(head == null) return null;
+        ListNode firstnode = head;
+        ListNode lastnode = head;
+        int nodelen = 0;
+        for(int i=0; i<k; i++){
+            lastnode = lastnode.next;
+            if(lastnode == null){
+                lastnode = head;
+                nodelen = i+1;//此时i = nodelen - 1,每次加上nodelen， 总共加上M*nodelen，故总长度为（M+1）*nodelen-1
+                i = (k / nodelen)*nodelen-1;
+            }
+        }
+        ListNode knode = head;
+        
+        while(lastnode.next!=null){
+            lastnode = lastnode.next;
+            knode = knode.next;
+        }
+        lastnode.next = firstnode;
+        ListNode result = knode.next;
+        knode.next = null;
+        return result;
+    }
+}
