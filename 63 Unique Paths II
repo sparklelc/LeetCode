@@ -1,8 +1,11 @@
 这题应该要用dynamic program来做，而不是DFS！！！
 
-注意要在最左边和最上面构造一条边界：
+注意要在最左边和最上面构造一条边界.
+
+另外技巧：Math.max(A+B,A+C)  可以写成   Math.max(B,C)+A
 
 
+///////////////////////
 别人的C++代码：
 class Solution {
 public:
