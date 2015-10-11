@@ -1,0 +1,47 @@
+题目:
+给定两个字符串 A和B，由A转成B所需的最少编辑操作次数。允许的编辑操作包括将一个字符替换成另一个字符，插入一个字符，
+删除一个字符。
+  例如: 将A(kitten)转成B(sitting)：
+    sitten （k→s）替换
+    sittin （e→i）替换
+    sitting （→g）插入
+
+
+**动态规划来做,没问题,但我一开始没把公式弄清楚
+1. d[0, j] = j;
+2. d[i, 0] = i;
+3. d[i, j] = d[i-1, j - 1] if A[i] == B[j]
+4. d[i, j] = min(d[i-1, j - 1], d[i, j - 1], d[i-1, j]) + 1  if A[i] != B[j]
+公式1,2是初始条件;我没弄对
+公式4是三种情况： 插入/删除word1一个字符, 插入/删除word2一个字符，替换一个字符
+
+
+
+
+public class Solution {
+public int minDistance(String word1, String word2) {
+        int[][] arr = new int[word1.length()+1][word2.length()+1];
+        if(word1.length() == 0 || word2.length()==0) 
+            return Math.max(word1.length(), word2.length());
+            
+        for (int i = 0; i <= word1.length(); i++) {  
+            arr[i][0] = i;  
+        }  
+        for (int i = 0; i <= word2.length(); i++) {  
+            arr[0][i] = i;  
+        }  
+            
+        for(int i=1; i<=word1.length(); i++){
+            for(int j=1; j<=word2.length(); j++){
+                if(word1.charAt(i-1)==word2.charAt(j-1)){
+                    arr[i][j] = arr[i-1][j-1];
+                }else{
+                    arr[i][j] = Math.min(Math.min(arr[i-1][j], arr[i][j-1]), arr[i-1][j-1])+1;
+                }
+            }
+        }
+    
+        int same = arr[word1.length()][word2.length()];
+        return same;
+    }
+}
