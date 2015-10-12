@@ -1,3 +1,7 @@
+Given a string containing just the characters '(' and ')', find the length of the longest valid (well-formed) parentheses substring.
+For "(()", the longest valid parentheses substring is "()", which has length = 2.
+Another example is ")()())", where the longest valid parentheses substring is "()()", which has length = 4.
+
 括号匹配，根本思想在于：右括号数目小于等于左括号。
 用stack把左括号位置压栈，用boolean数组来记录符合要求的位置。
 
