@@ -1,0 +1,28 @@
+我写的快速排序:
+public class Solution {
+	public int[] fastSort(int[] arr, int start, int end){
+		if(start >= end)
+			return arr;
+		int index1 = start;
+		int index2 = end;
+		while(index1 < index2){
+			if(arr[index1] > arr[index1+1]){
+				swap(arr, index1, index1+1);
+				index1++;
+			}else{
+				swap(arr, index1+1, index2);
+				index2--;
+			}
+		}
+		fastSort(arr, start, index1-1);
+		fastSort(arr, index1+1, end);
+		return arr;
+	}
+    
+	public void swap(int[] arr, int index1, int index2){
+		int temp = arr[index1];
+		arr[index1] = arr[index2];
+		arr[index2] = temp;
+	}
+
+}
