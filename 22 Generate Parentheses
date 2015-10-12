@@ -1,4 +1,10 @@
-高阶元素都是由子元素组成：
+Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+For example, given n = 3, a solution set is:
+"((()))", "(()())", "(())()", "()(())", "()()()"
+n=1 ()
+n=2 (()) ()()
+
+高阶元素都是由子元素组成：("(" + insert + ")" + tail);
 
 网上的解法：
 For 2, it should place one "()" and add another one insert it but none tail it,
