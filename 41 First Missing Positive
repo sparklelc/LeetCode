@@ -1,3 +1,9 @@
+Given an unsorted integer array, find the first missing positive integer.
+For example,
+Given [1,2,0] return 3,
+and [3,4,-1,1] return 2.
+Your algorithm should run in O(n) time and uses constant space.
+
 基本思想，冒泡把数字移动到相应的位置，找出第一个不符合要求的数字：
 
 注意：发生移动后，不要立即i++，要从当前位置继续。
