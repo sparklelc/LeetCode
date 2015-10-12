@@ -1,5 +1,8 @@
 链表移动题目：
-
+Given a list, rotate the list to the right by k places, where k is non-negative.
+For example:
+Given 1->2->3->4->5->NULL and k = 2,
+return 4->5->1->2->3->NULL.
 
 我的思路：
 两个指针，knode和lastnode，指向倒数k位和最后一位，每次将两个指针向后移动
