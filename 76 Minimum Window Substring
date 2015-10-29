@@ -1,0 +1,63 @@
+Hard
+题目 ： 从S里面找出最短的包含T所有元素的序列
+S = "ADOBECODEBANC"
+T = "ABC"
+Minimum window is "BANC"
+
+
+根据网上别人的思路我写的代码：
+核心思想：（用两个指针）(不要用hashmap, char只有8bit直接用int[256])
+1. 只要还没包含完T的全部元素，则右指针继续向右一步；
+2. 当包含完全T元素后，判断是否比之前最优结果好，然后将左指针向右移动一步；
+
+
+public class Solution{
+public String minWindow(String s, String t) {
+		int[] need = new int[256];              //表示某个字母出现次数时候已经满足
+		boolean[] isneed = new boolean[256];    //表示T里面是否包含这个字母
+		int total = 0;                          //表示还差多少个T的元素
+		for (char c : t.toCharArray()) {
+			need[c] -= 1;
+			isneed[c] = true;
+			total += 1;
+		}
+
+		if (s.length() == 0 || t.length() == 0)
+			return "";
+		if(s.equals(t))
+		    return s;
+
+		int first = 0;
+		int last = 0;
+		int bestfirst = -1;
+		int bestlast = -1;
+		int best = Integer.MAX_VALUE;
+
+		while (true) {
+			if (total == 0) {
+				if (last - first < best) {
+					bestfirst = first;
+					bestlast = last;
+					best = bestlast - bestfirst;
+				}
+				
+				need[s.charAt(first)] -= 1;
+				if (isneed[s.charAt(first)] && need[s.charAt(first)] < 0)
+					total++;
+				first++;
+
+			} else if (total > 0) {
+				if (last >= s.length())
+					break;
+				need[s.charAt(last)] += 1;
+				if (isneed[s.charAt(last)] && need[s.charAt(last)] <= 0)
+					total -= 1;
+				last++;
+			}
+		}
+		if (bestfirst == -1)
+			return "";
+		else
+			return s.substring(bestfirst, bestlast);
+	}
+}
