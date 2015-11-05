@@ -1,0 +1,48 @@
+题目-Hard:
+For example,
+Given height = [2,1,5,6,2,3],
+return 10.
+求最大的矩形面积。
+
+
+思想比较巧妙：
+具体可以看   http://blog.csdn.net/beiyetengqing/article/details/8258232
+如果下一个元素比这个小，把之前的stack的元素一个个pop出来计算他们的大小。
+
+注意的点：
+1. 在数组后面加一个0元素用于把之前的结果pop出来
+2. pop出来后再压进去的index是最后一次pop出来的index
+
+
+
+结合网上的思想，我写的代码：
+import java.util.LinkedList;
+public class Solution {
+    public int largestRectangleArea(int[] height) {
+        LinkedList<Integer> index = new LinkedList<Integer>();
+        LinkedList<Integer> maxNum = new LinkedList<Integer>();
+        int bestresult = 0;
+        for(int i=0; i<=height.length; i++){
+            if(i==height.length || (maxNum.size()!=0 && height[i]<maxNum.getLast())){
+                                                                  //i==height.length用于把前面结果全部pop出来
+                int lastnum = i==height.length? 0:height[i];
+                int thisindex = -1;
+                while(maxNum.size()!=0 && lastnum < maxNum.getLast()){
+                    int temindex= index.getLast();
+                    int temnum = maxNum.getLast();
+                    thisindex = temindex;
+                    index.removeLast();
+                    maxNum.removeLast();
+                    bestresult = Math.max(bestresult, (i-temindex)*temnum);
+                }
+                index.addLast(thisindex);                       //再压进去的index是最后pop出来的index
+                maxNum.addLast(lastnum);
+            }
+            else{
+                index.addLast(i);
+                maxNum.addLast(height[i]);
+            }
+        }
+        return bestresult;
+    }
+}
