@@ -1,0 +1,72 @@
+Done
+题目：旋转的递增数组， 如[11111121]里面找2
+
+我的代码：
+public class Solution {
+    public boolean search(int[] nums, int target) {
+        return halfsearch(nums, 0, nums.length, target);
+    }
+    
+    public boolean halfsearch(int[] nums, int start, int last, int target){
+        if(start == last - 1){
+            if(nums[start]==target)
+                return true;
+        
+            else
+                return false;
+        }
+        
+        int mid = (start+last)/2;
+        
+        if(nums[mid-1] == nums[start] && nums[start] == nums[mid-1])
+            return halfsearch(nums, start, mid, target) || halfsearch(nums, mid, last, target);
+        
+        if(nums[mid-1] >= nums[start]){
+            if(nums[mid-1] >= target && target >= nums[start])
+                return halfsearch(nums, start, mid, target);
+            else
+                return halfsearch(nums, mid, last, target);
+        }
+        else{
+            if(target > nums[mid-1] && target <= nums[last-1])
+                return halfsearch(nums, mid, last, target);
+            else
+                return halfsearch(nums, start, mid, target);
+        }
+            
+
+    }
+}
+
+网上别人写的非递归的方法:
+public boolean search(int[] nums, int target) {
+        int start = 0, end = nums.length - 1, mid = -1;
+        while(start <= end) {
+            mid = (start + end) / 2;
+            if (nums[mid] == target) {
+                return true;
+            }
+            //If we know for sure right side is sorted or left side is unsorted
+            if (nums[mid] < nums[end] || nums[mid] < nums[start]) {
+                if (target > nums[mid] && target <= nums[end]) {
+                    start = mid + 1;
+                } else {
+                    end = mid - 1;
+                }
+            //If we know for sure left side is sorted or right side is unsorted
+            } else if (nums[mid] > nums[start] || nums[mid] > nums[end]) {
+                if (target < nums[mid] && target >= nums[start]) {
+                    end = mid - 1;
+                } else {
+                    start = mid + 1;
+                }
+            //If we get here, that means nums[start] == nums[mid] == nums[end], then shifting out
+            //any of the two sides won't change the result but can help remove duplicate from
+            //consideration, here we just use end-- but left++ works too
+            } else {
+                end--;
+            }
+        }
+
+        return false;
+    }
