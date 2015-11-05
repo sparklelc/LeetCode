@@ -5,6 +5,7 @@ Given 1->2->3->3->4->4->5, return 1->2->5.
 Given 1->1->1->2->3, return 2->3.
 
 网上的代码：比我好的地方在于他用的是cur指针，然后用while判断和下一个指针是否相同
+此外创建了一个初始结点
 public ListNode deleteDuplicates(ListNode head) {
         if(head==null) return null;
         ListNode FakeHead=new ListNode(0);
