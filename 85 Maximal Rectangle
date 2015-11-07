@@ -1,0 +1,77 @@
+Hard 题目:
+Given a 2D binary matrix filled with 0's and 1's, find the largest rectangle containing all ones and return its area.
+如:
+1 0 1
+0 1 1
+0 1 1
+返回 2*2=4;
+
+网上思路：结合上一题的思想来做
+新建一个数组用于存放某个元素上面连续的1的数量
+1 0 1
+0 1 2
+0 2 3
+
+每行用上面一题的做法来处理，每行复杂度是O(n)，总的复杂度是O(n^2)
+
+*******************************************************
+我的代码如下：
+import java.util.LinkedList;
+public class Solution {
+    public int maximalRectangle(char[][] matrix) {
+        if(matrix.length == 0)
+            return 0;
+            
+        int[][] arr = new int [matrix.length][matrix[0].length];
+        for(int j=0; j<matrix[0].length; j++){
+            int sum = 0;
+            for(int i=0; i<matrix.length; i++){
+                if(matrix[i][j] == '1')
+                    sum++;
+                else
+                    sum = 0;
+                arr[i][j] = sum;
+            }
+        }
+        
+        int bestResult = 0;
+        for(int i=0; i<matrix.length; i++){
+            bestResult = Math.max(bestResult, findMax(arr[i]));
+        }
+        return bestResult;
+    }
+    
+    public int findMax(int[] arr){
+        LinkedList<Integer> index = new LinkedList<Integer>();
+        LinkedList<Integer> num = new LinkedList<Integer>();
+        
+        int bestResult = 0;
+        index.addLast(0);
+        num.addLast(arr[0]);
+        for(int i=1; i<=arr.length; i++){
+            if(i == arr.length || num.getLast() > arr[i]){
+                int thisnum = i == arr.length? 0:arr[i];
+                int lastnum = num.getLast();
+                int lastindex = index.getLast();
+                
+                while(index.size()!=0 && num.getLast() > thisnum){
+                    lastnum = num.getLast();
+                    lastindex = index.getLast();
+                    num.removeLast();
+                    index.removeLast();
+                    bestResult = Math.max(bestResult, (i-lastindex)*lastnum);
+                }
+                
+                if(i!=arr.length){
+                    num.addLast(arr[i]);
+                    index.addLast(lastindex);
+                }
+            }
+            else{
+                num.addLast(arr[i]);
+                index.addLast(i);
+            }
+        }
+        return bestResult;
+    }
+}
