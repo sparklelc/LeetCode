@@ -1,0 +1,63 @@
+Easy题目：
+If nums = [1,2,2], a solution is:
+[
+  [2],
+  [1],
+  [1,2,2],
+  [2,2],
+  [1,2],
+  []
+]
+返回所有可能的子集。
+
+我的思路：不用递归，从小到大的数开始，一开始[]，判断1要不要加， 再判断2不加/加一个/加两个
+
+我的代码：
+import java.util.LinkedList;
+public class Solution {
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        LinkedList<List<Integer>> result = new LinkedList<List<Integer>>();
+        result.add(new LinkedList<Integer>());
+        
+        for(int i=0; i<nums.length; ){
+            if((i+1<nums.length && nums[i]!=nums[i+1]) || i+1 == nums.length){
+                int len = result.size();
+                for(int x=0; x<len; x++){
+                    LinkedList<Integer> list = (LinkedList) result.getFirst();
+                    result.removeFirst();
+                    result.addLast((List) list);
+                    
+                    LinkedList<Integer> newlist = new LinkedList<Integer>(list);
+                    newlist.addLast(nums[i]);
+                    result.addLast(newlist);
+                }
+                i++;
+            }
+            else{
+                int times = 2;
+                i++;
+                while(i+1<nums.length && nums[i]==nums[i+1]){
+                    times++;
+                    i++;
+                }
+                
+                int len = result.size();
+                for(int x=0; x<len; x++){
+                    LinkedList<Integer> list = (LinkedList)result.getFirst();
+                    result.removeFirst();
+                    result.addLast((List) list);
+                    
+                    for(int k=1; k<=times; k++){
+                        LinkedList<Integer> newlist = new LinkedList<Integer>(list);
+                        for(int m=1; m<=k; m++)
+                            newlist.addLast(nums[i]);
+                        result.addLast(newlist);
+                    }
+                }
+                i++;
+            }
+        }
+        return (List) result;
+    }
+}
