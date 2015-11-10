@@ -1,0 +1,52 @@
+Hard题目：
+Given a string s1, we may represent it as a binary tree by partitioning it to two non-empty substrings recursively.
+
+Below is one possible representation of s1 = "great":
+We say that "rgtae" is a scrambled string of "great".
+    great
+   /    \
+  gr    eat
+ / \    /  \
+g   r  e   at
+           / \
+          a   t
+
+
+做法：动态规划
+用isScr[len][i][j]表示s1从i位置和s2从j位置开始的长度为len的两个string是否是Scr的。
+这种题目很符合动规的特点
+
+
+public class Solution {
+    public boolean isScramble(String s1, String s2) {
+        int length = s1.length();
+        boolean[][][] isScr = new boolean[length+1][length][length];
+        if(length == 0)
+            return true;
+        for(int i=0; i<length; i++)
+            for(int j=0; j<length; j++)
+                if(s1.charAt(i) == s2.charAt(j))
+                    isScr[1][i][j] = true;                        //判断len=1的情况 
+        
+        for(int len=2; len<=length; len++){
+            for(int i=0; i<=length-len; i++){
+                for(int j=0; j<=length-len; j++){
+                    if(s1.substring(i, i+len).equals(s2.substring(j, j+len))){
+                        isScr[len][i][j] = true;
+                        continue;
+                    }
+                        
+                    for(int m=1; m<len; m++){
+                        isScr[len][i][j] = (isScr[len-m][i][j+m] && isScr[m][i+len-m][j]) || 
+                                            (isScr[m][i][j] && isScr[len-m][i+m][j+m]);
+                                            //本题动态规划的核心
+                        if(isScr[len][i][j])
+                            break;
+                    }
+                }
+            }
+        }
+        
+        return isScr[length][0][0];
+    }
+}
