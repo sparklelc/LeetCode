@@ -1,0 +1,32 @@
+Easy题目:
+Given two sorted integer arrays nums1 and nums2, merge nums2 into nums1 as one sorted array.
+Note:
+You may assume that nums1 has enough space (size that is greater or equal to m + n) to hold additional elements 
+from nums2. The number of elements initialized in nums1 and nums2 are m and n respectively.
+假设nums1数组足够大去容纳两个数组的内容。
+
+这题关键在于先弄大的元素，因为nums1的数组的后面的内容是可以随意替换的
+如果先从nums1数组的前面元素开始弄，那么这题将十分复杂。 要善于观察
+
+public class Solution {
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int index1 = m-1;
+        int index2 = n-1;
+        int index3 = m+n-1;
+        while(index1 >=0 && index2 >= 0){
+            if(nums1[index1] > nums2[index2]){
+                nums1[index3] = nums1[index1];
+                index1--;
+            }else{
+                nums1[index3] = nums2[index2];
+                index2--;
+            }
+            index3--;
+        }
+        while(index2 >= 0){
+            nums1[index3] = nums2[index2];
+            index2 --;
+            index3 --;
+        }
+    }
+}
