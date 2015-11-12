@@ -1,3 +1,11 @@
+For example, given: ["eat", "tea", "tan", "ate", "nat", "bat"], 
+Return:
+[
+  ["ate", "eat","tea"],
+  ["nat","tan"],
+  ["bat"]
+]
+
 如abc 和 acb是异形词
 
-思路：字母排序作为标志， 通过判断标志是否一致来判断它们是否为异形词。
+思路：字母排序作为标志Key， 通过判断标志是否一致来判断它们是否为异形词。
