@@ -1,3 +1,6 @@
+Input:Digit string "23"
+Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+
 别人代码：用FIFO queue，如果出来的元素长度不是和电话号码长度一样，则添加再压到队列里
 
 public List<String> letterCombinations(String digits) {
