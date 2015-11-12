@@ -2,7 +2,7 @@ Given n pairs of parentheses, write a function to generate all combinations of w
 For example, given n = 3, a solution set is:
 "((()))", "(()())", "(())()", "()(())", "()()()"
 n=1 ()
-n=2 (()) ()()
+n=2 (())， ()()
 
 高阶元素都是由子元素组成：("(" + insert + ")" + tail);
 
@@ -11,6 +11,7 @@ For 2, it should place one "()" and add another one insert it but none tail it,
 '(' f(1) ')' f(0)
 or add none insert it but tail it by another one,
 '(' f(0) ')' f(1)
+***********
 Thus for n, we can insert f(i) and tail f(j) and i+j=n-1,
 '(' f(i) ')' f(j)
 
