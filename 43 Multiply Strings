@@ -1,15 +1,15 @@
 把两个String类型的数字相乘得到一个String类型的结果，数字可能很大
 
-我用Stringbuffer的reverse()来做，其实用int[]来存储可能会好一点。
-Stringbuffer一开始先把所有位置成‘0’，然后最后的时候要把前面的'0'去掉，如“00123”
+我用Stringbuffer的reverse()来做，其实用int[]来存储可能会好一点，因为本身就是操作数字而非string,而且int[]默认为0。
+Stringbuffer一开始先把所有位置设成‘0’，然后最后的时候要把前面的'0'去掉，如“00123”
 
 我的代码如下：
 public class Solution {
     public String multiply(String num1, String num2) {
         StringBuffer buf1 = new StringBuffer(num1);
         StringBuffer buf2 = new StringBuffer(num2);
-        buf1.reverse();
-        buf2.reverse();
+        buf1.reverse();                         
+        buf2.reverse();                         //翻转两个乘数
         StringBuffer result = new StringBuffer(num1.length()+num2.length());
         for(int i=0; i<num1.length()+num2.length(); i++){
             result.append('0');
