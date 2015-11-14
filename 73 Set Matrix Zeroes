@@ -1,3 +1,3 @@
-Given a m x n matrix, if an element is 0, set its entire row and column to 0. Do it in place.
+题目:Given a m x n matrix, if an element is 0, set its entire row and column to 0. Do it in place.
 
 网上想法:若某元素等于0, 则将其的每行每列第一个元素设置成0
