@@ -14,3 +14,31 @@ If n = 4 and k = 2, a solution is:
 
 我的递归做法：C(n,k)=C(n-1,k-1)+C(n-1,k)
 当然写成非递归会更好
+import java.util.LinkedList;
+public class Solution {
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> result = new LinkedList<List<Integer>>();
+        
+        if(n < k || k <= 0)
+            return result;
+        else if(k == 1){
+            for(int i=0; i<n; i++){
+                List<Integer> temlist = new LinkedList<Integer>();
+                temlist.add(i+1);
+                result.add(temlist);
+            }
+            return result;
+        }
+        
+        for(List<Integer> list : combine(n-1, k-1)){
+            List<Integer> temlist = new LinkedList<Integer>(list);
+            temlist.add(n);
+            result.add(temlist);
+        }
+        for(List<Integer> list:combine(n-1, k)){
+            List<Integer> temlist = new LinkedList<Integer>(list);
+            result.add(temlist);
+        }
+        return result;
+    }
+}
