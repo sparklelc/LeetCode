@@ -28,3 +28,84 @@ public class Solution {
         return true;
     }
 }
+
+
+我的代码:
+import java.util.LinkedList;
+public class Solution {
+    public List<String> restoreIpAddresses(String s) {
+        int sLen = s.length();
+        List<String> result = new LinkedList<String>();
+        if(s.length() == 0) 
+            return result;
+        LinkedList<LinkedList<Integer>> tem = new LinkedList<LinkedList<Integer>>();
+        LinkedList<Integer> temlen = new LinkedList<Integer>();
+        tem.addLast(new LinkedList<Integer>());
+        temlen.addLast(0);
+        
+        for(int i=1; i<=4; i++){
+            int len = tem.size();
+            for(int j=0; j<len; j++){
+                LinkedList<Integer> temlist = tem.getFirst();
+                tem.removeFirst();
+                int temlistlen = temlen.getFirst();
+                temlen.removeFirst();
+                
+                for(int k=3; k>=1; k--){
+                    if(s.charAt(temlistlen) == '0'){
+                        k = 1;
+                        if(sLen - temlistlen - k <= (4-i)*3 && sLen - temlistlen - k >= 4-i){
+                            LinkedList<Integer> newlist = new LinkedList<Integer>(temlist);
+                            int newtemlistlen = temlistlen + k;
+                            Integer inte = Integer.valueOf(s.substring(temlistlen, temlistlen+k));
+                            if(inte < 256){
+                                newlist.addLast(inte);
+                                temlen.addLast(newtemlistlen);
+                                tem.addLast(newlist);
+                            }
+                        }
+                        break;
+                    }
+                    
+                    if(i!=4 && sLen - temlistlen - k <= (4-i)*3 && sLen - temlistlen - k >= 4-i){
+                        LinkedList<Integer> newlist = new LinkedList<Integer>(temlist);
+                        int newtemlistlen = temlistlen + k;
+                        Integer inte = Integer.valueOf(s.substring(temlistlen, temlistlen+k));
+                        if(inte < 256){
+                            newlist.addLast(inte);
+                            temlen.addLast(newtemlistlen);
+                            tem.addLast(newlist);
+                        }
+                    }else if(i==4){
+                        if(sLen - temlistlen<=3 && sLen - temlistlen >= 1){
+                            k = sLen - temlistlen;
+                            LinkedList<Integer> newlist = new LinkedList<Integer>(temlist);
+                            int newtemlistlen = temlistlen + k;
+                            Integer inte = Integer.valueOf(s.substring(temlistlen, temlistlen+k));
+                            if(inte < 256){
+                                newlist.addLast(inte);
+                                temlen.addLast(newtemlistlen);
+                                tem.addLast(newlist);
+                            }
+                        }
+                        break;
+                    }
+                    
+                }
+            }
+        }
+        for(LinkedList<Integer> list:tem){
+            StringBuffer buf = new StringBuffer();
+            int i = 1;
+            for(Integer inte:list){
+                buf.append(inte.toString());
+                if(i!=4){
+                    buf.append('.');
+                    i++;
+                }
+            }
+            ((LinkedList) result).addLast(buf.toString());
+        }
+        return result;
+    }
+}
