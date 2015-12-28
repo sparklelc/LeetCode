@@ -1,0 +1,48 @@
+Mid题目：
+Given n, generate all structurally unique BST's (binary search trees) that inorder sequence is 1...n.
+For example,
+Given n = 3, your program should return all 5 unique BST's shown below.
+
+   1         3     3      2      1
+    \       /     /      / \      \
+     3     2     1      1   3      2
+    /     /       \                 \
+   2     1         2                 3
+   
+
+我的思路和网上别人的差不多，用递归
+选出中间节点后再对两边的进行处理，比如选出2做中间节点以后，左子树只能在{1}内选择，右子树只能在{3}内选择
+
+
+
+
+我的代码：
+public class Solution {
+    public List<TreeNode> generateTrees(int n) {
+        if(n==0) return new ArrayList<TreeNode>();
+        return generate(1, n);
+    }
+    
+    public List<TreeNode> generate(int min, int max) {          //子函数，用于生成在某个范围{}内的全部子树
+        List<TreeNode> result = new ArrayList<TreeNode>();
+        if(max<min)
+            result.add(null); //这里加null，而非直接返回result
+        else if(min == max)
+            result.add(new TreeNode(min));
+        else{
+            for(int i=min; i<=max; i++){
+                List<TreeNode> left = generate(min, i-1);
+                List<TreeNode> right = generate(i+1, max);
+                for(TreeNode leftNode: left){
+                    for(TreeNode rightNode: right){
+                        TreeNode newNode = new TreeNode(i);
+                        newNode.left = leftNode;
+                        newNode.right = rightNode;
+                        result.add(newNode);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+}
