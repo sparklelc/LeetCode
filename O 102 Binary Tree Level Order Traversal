@@ -55,3 +55,72 @@ public class Solution {
         return result;
     }
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+顺便说下103题，题目差不多，不过103是交替顺序，先从左向右，再从右向左。
+
+Given binary tree {3,9,20,#,#,15,7},
+    3
+   / \
+  9  20
+    /  \
+   15   7
+return its zigzag level order traversal as:
+[
+  [3],
+  [20,9],
+  [15,7]
+]
+
+和上题不过的有两个关键地方：
+1.这个要实现左右子树交替压入；    
+2.要用addFirst来实现节点交替放入。
+
+/////////////////////我的代码如下：
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    List<List<Integer>> result = new LinkedList();
+    List<TreeNode> queue = new LinkedList();
+    boolean toRight = false;
+    
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        if(root == null)
+            return result;
+        queue.add(root);
+        while(queue.size() != 0){
+            LinkedList<TreeNode> tem = new LinkedList();
+            List<Integer> list = new LinkedList();
+            for(TreeNode node:queue){
+                list.add(node.val);
+                if(toRight){
+                    if(node.right != null)
+                        tem.addFirst(node.right);
+                    if(node.left != null)
+                        tem.addFirst(node.left);
+                } else {
+                    if(node.left != null)
+                        tem.addFirst(node.left);
+                    if(node.right != null)
+                        tem.addFirst(node.right);
+                }
+                
+            }
+            result.add(list);
+            queue = (List)tem;
+            toRight = !toRight;
+        }
+        return result;
+    }
+}
