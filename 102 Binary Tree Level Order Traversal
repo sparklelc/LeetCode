@@ -1,0 +1,57 @@
+Easy题目：
+
+例子如下
+Given binary tree {3,9,20,#,#,15,7},
+    3
+   / \
+  9  20
+    /  \
+   15   7
+return its level order traversal as:
+[ [3],
+  [9,20],
+  [15,7] ]
+
+
+
+处理方式：一层层处理，把每层结果存到queue，把下一层的缓存入tem，处理完queue后，赋值queue = tem开始处理下一层。
+我一开始还想着用queue1, queue2交替缓存，但这样要每次判断是处理到queue1还是queue2了，处理queue1和queue2代码重复，后来想想完全没必要。
+
+
+
+//******************************** 我的代码如下
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    LinkedList<TreeNode> queue = new LinkedList();
+    List<List<Integer>> result = new LinkedList();
+    
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        if(root == null)
+            return result;
+        queue.add(root);
+        
+        while(queue.size() != 0){
+            LinkedList<TreeNode> tem = new LinkedList();
+            List<Integer> list = new LinkedList<Integer>();
+            for(TreeNode node: queue){
+                list.add(node.val);
+                if(node.left != null)
+                    tem.add(node.left);
+                if(node.right != null)
+                    tem.add(node.right);
+            }
+            result.add(list);
+            queue = tem;
+        }
+        return result;
+    }
+}
