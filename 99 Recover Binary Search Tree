@@ -1,0 +1,69 @@
+Hard题目：
+BST树中某两个元素的位置被交换了，找出这两个并且交换回来。
+  Two elements of a binary search tree (BST) are swapped by mistake.
+  Recover the tree without changing its structure.
+**特殊要求：用constant space不要用O(n)的space.
+
+
+我的思路：
+如果用“O(n)的space”而且“任意两元素都不相同”。可以转换成ArrayList来找出两个元素交换，复杂度是O(3n).
+第一次遍历全部元素到ArrayList花费O(n)；
+第二次找出不符合的元素花费O(n)，如2<9<6<8<5是错误的，‘9’<6和8<‘5’是错误的，选择‘第一个错误’左值和‘第二个错误’右值(即为本例的9和5)交换。
+    如果只有一个错误如1<3<2，那么3<2的错误的左值和右值交换。
+第三次遍历树找出这两个TreeNode的值进行交换花费O(n)。
+
+
+网上别人的思路：
+如果某个节点小于它左边（指中序遍历的左边）元素的值，那么这个最小值节点就是错误的，同上所说的(‘第一个错误’左值).
+如果下一次某节点小于它左边（指中序遍历的左边）元素的值，那个这个节点就是错误的，同上所说的(‘第二个错误’右值).
+    **其实核心：就在如何把ArrayList里面的左右数值比较，转换成树里面的比较。
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+参照别人的思路我的代码如下：
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    TreeNode oneNode = null;
+    TreeNode twoNode = null;
+    TreeNode leftNode = new TreeNode(Integer.MIN_VALUE);
+    
+    public void recoverTree(TreeNode root) {
+        if(root == null)
+            return;
+        else
+            check(root);
+        
+        int tem = oneNode.val;
+        oneNode.val = twoNode.val;
+        twoNode.val = tem;
+    }
+    
+    public void check(TreeNode root) {
+        if(root.left != null)
+            check(root.left);
+        
+        if(oneNode == null) {
+            if (root.val < leftNode.val){
+                oneNode = leftNode;
+                twoNode = root;
+            }
+        } else {
+            if (root.val < leftNode.val) {
+                twoNode = root;
+            }
+        }
+        
+        leftNode = root;
+        
+        if(root.right != null)
+            check(root.right);
+    }
+}
