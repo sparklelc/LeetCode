@@ -46,10 +46,12 @@ public class Solution {
         twoNode.val = tem;
     }
     
-    public void check(TreeNode root) {
+    public void check(TreeNode root) {  //因为BST本身就是中序遍历成递增规律，所以很明显想到先左然后中间再右。
         if(root.left != null)
             check(root.left);
+        //处理左子树
         
+        //处理中间结点
         if(oneNode == null) {
             if (root.val < leftNode.val){
                 oneNode = leftNode;
@@ -61,6 +63,7 @@ public class Solution {
             }
         }
         
+        //处理右结点
         leftNode = root;
         
         if(root.right != null)
