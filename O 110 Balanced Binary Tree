@@ -1,0 +1,28 @@
+Easy:
+Given a binary tree, determine if it is height-balanced.
+For this problem, a height-balanced binary tree is defined as a binary tree in which the 
+depth of the two subtrees of every node never differ by more than 1.
+判断一棵树是否平衡。
+
+简单题目，但注意把result设为全局变量，如果不满足则改掉全局变量result，这样遍历所有节点一次就可以得出结果。
+
+
+//我的代码
+public class Solution {
+    boolean result = true;
+    
+    public boolean isBalanced(TreeNode root) {
+        checkHeight(root);
+        return result;
+    }
+    
+    public int checkHeight(TreeNode node) {
+        if(node == null)
+            return 0;
+        int leftHeight = checkHeight(node.left);
+        int rightHeight = checkHeight(node.right);
+        if(rightHeight - leftHeight >= 2 || leftHeight - rightHeight >= 2)
+            result = false;
+        return Math.max(leftHeight, rightHeight)+1;
+    }
+}
