@@ -1,0 +1,49 @@
+Mid题目：
+Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
+一个自定义结构的升序链表转成BST树。
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+ 
+ 
+ 难点在于如何用O(1)space来做，虽然题目没有这种要求，我也没按O(1)space来做：
+ 别人的代码：
+ public TreeNode sortedListToBST(ListNode head) {
+    if(head == null){
+        return null;
+    }
+
+    int size = 0;
+    ListNode runner = head;
+    node = head;
+
+    while(runner != null){
+        runner = runner.next;
+        size ++;
+    }
+
+    return inorderHelper(0, size - 1);
+}
+
+public TreeNode inorderHelper(int start, int end){
+    if(start > end){
+        return null;
+    }
+
+    int mid = start + (end - start) / 2;
+    TreeNode left = inorderHelper(start, mid - 1);    //亮点在于此，先做最前面的
+
+    TreeNode treenode = new TreeNode(node.val);       //做中间的
+    treenode.left = left;
+    node = node.next;
+
+    TreeNode right = inorderHelper(mid + 1, end);     //做右子树
+    treenode.right = right;
+
+    return treenode;
+}
