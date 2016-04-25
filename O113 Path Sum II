@@ -1,0 +1,55 @@
+Mid:
+Given a binary tree and a sum, find all root-to-leaf paths where each path's sum equals the given sum.
+
+For example:
+Given the below binary tree and sum = 22,
+              5
+             / \
+            4   8
+           /   / \
+          11  13  4
+         /  \    / \
+        7    2  5   1
+return
+[
+   [5,4,11,2],
+   [5,8,4,5]
+]
+
+注意:没说每个结点的值都大于0,不能直接用减法判断能否在中间结点中止,必须把所有子结点都遍历一次!
+
+
+//我的代码,看了下和网上别人思路差不多
+public class Solution {
+    LinkedList<List<Integer>> result = new LinkedList<List<Integer>>();
+    
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        if (root != null)
+            findPath(root, new LinkedList<Integer>(), sum);
+        return (List) result;
+    }
+    
+    public void findPath(TreeNode node, LinkedList<Integer> tem, int sum) {
+        if (node.left == null && node.right == null) {
+            if(node.val == sum) {
+                tem.addLast(node.val); //重复,可以提前做
+                result.addLast((List) tem);
+                return;
+            } else {
+                return;
+            }
+        } else {
+            if (node.left != null) {
+                LinkedList list = new LinkedList<Integer>(tem);
+                list.addLast(node.val); //重复
+                findPath(node.left, list, sum-node.val);
+            }
+            
+            if (node.right != null) {
+                LinkedList list = new LinkedList<Integer>(tem);
+                list.addLast(node.val); //重复
+                findPath(node.right, list, sum-node.val);
+            }
+        }
+    }
+}
