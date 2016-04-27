@@ -27,8 +27,9 @@ After calling your function, the tree should look like:
     
     
 不难，但有更好做法，注意题目这里说这是一棵满二叉树
+题目117就不是满二叉树了，用我这段代码同样可以通过，但可以优化，没有必要用ArrayList存放一行的所有节点，直接存上一个节点就行。
 
-// 别人代码
+// 别人代码，题目116
 public class Solution {
     public void connect(TreeLinkNode root) {
         TreeLinkNode level_start=root;
@@ -45,7 +46,7 @@ public class Solution {
     }
 }
 
-// 我的代码
+// 我的代码，题目116，117都可以通过
 public class Solution {
     public void connect(TreeLinkNode root) {
         ArrayList<TreeLinkNode> list = new ArrayList<TreeLinkNode>();
@@ -70,6 +71,29 @@ public class Solution {
             if(node.right != null)
                 newList.add(node.right);
             list = newList;
+        }
+    }
+}
+
+
+// 题目117，别人代码
+public void connect(TreeLinkNode root) {
+    TreeLinkNode dummyHead = new TreeLinkNode(0);
+    TreeLinkNode pre = dummyHead;
+    while (root != null) {
+        if (root.left != null) {
+            pre.next = root.left;
+            pre = pre.next;
+        }
+        if (root.right != null) {
+            pre.next = root.right;
+            pre = pre.next;
+        }
+        root = root.next;
+        if (root == null) {
+            pre = dummyHead;
+            root = dummyHead.next;
+            dummyHead.next = null;
         }
     }
 }
