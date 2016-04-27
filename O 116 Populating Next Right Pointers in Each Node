@@ -1,0 +1,75 @@
+Mid：
+Given a binary tree
+    struct TreeLinkNode {
+      TreeLinkNode *left;
+      TreeLinkNode *right;
+      TreeLinkNode *next;
+    }
+Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to NULL.
+Initially, all next pointers are set to NULL.
+Note:
+
+You may only use constant extra space.
+You may assume that it is a perfect binary tree (ie, all leaves are at the same level, and every parent has two children).
+For example,
+Given the following perfect binary tree,
+         1
+       /  \
+      2    3
+     / \  / \
+    4  5  6  7
+After calling your function, the tree should look like:
+         1 -> NULL
+       /  \
+      2 -> 3 -> NULL
+     / \  / \
+    4->5->6->7 -> NULL
+    
+    
+不难，但有更好做法，注意题目这里说这是一棵满二叉树
+
+// 别人代码
+public class Solution {
+    public void connect(TreeLinkNode root) {
+        TreeLinkNode level_start=root;
+        while(level_start!=null){
+            TreeLinkNode cur=level_start;
+            while(cur!=null){
+                if(cur.left!=null) cur.left.next=cur.right;
+                if(cur.right!=null && cur.next!=null) cur.right.next=cur.next.left;
+
+                cur=cur.next;
+            }
+            level_start=level_start.left;
+        }
+    }
+}
+
+// 我的代码
+public class Solution {
+    public void connect(TreeLinkNode root) {
+        ArrayList<TreeLinkNode> list = new ArrayList<TreeLinkNode>();
+        
+        if(root == null)
+            return;
+        list.add(root);
+        while (list.size() != 0) {
+            ArrayList<TreeLinkNode> newList = new ArrayList<TreeLinkNode>();
+            for (int i=0; i<list.size()-1; i++) {
+                TreeLinkNode node = list.get(i);
+                node.next = list.get(i+1);
+                if(node.left != null)
+                    newList.add(node.left);
+                if(node.right != null)
+                    newList.add(node.right);
+            }
+            TreeLinkNode node = list.get(list.size()-1);
+            node.next = null;
+            if(node.left != null)
+                newList.add(node.left);
+            if(node.right != null)
+                newList.add(node.right);
+            list = newList;
+        }
+    }
+}
