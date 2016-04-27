@@ -1,0 +1,93 @@
+Hard:
+Given a string S and a string T, count the number of distinct subsequences of T in S.
+A subsequence of a string is a new string which is formed from the original string by deleting some (can be none) of the characters 
+    without disturbing the relative positions of the remaining characters. (ie, "ACE" is a subsequence of "ABCDE" while "AEC" is not).
+Here is an example:
+S = "rabbbit", T = "rabbit"
+Return 3.
+
+方法：动归（增序），注意不要递归，会超时。
+
+
+
+我的解法1： // 1.递归
+               2.可惜没考虑备忘录，不算动归。
+               @ 超时，超时原因估计是用递归太慢
+public class Solution {
+    public int result = 0;
+    
+    public int numDistinct(String s, String t) {
+        if(s == null || t == null)
+            return this.result;
+        find(s, t, 0 , 0); // 顺序递归
+        return this.result;
+    }
+    
+    public void find(String s, String t, int indexS, int indexT) {
+        if(indexS == s.length() && indexT == t.length()) {
+            this.result ++;
+            return;
+        }
+        if (indexS == s.length() || indexT == t.length())
+            return;
+            
+        if (s.charAt(indexS) == t.charAt(indexT)) {
+            find(s, t, indexS+1, indexT+1);
+            find(s, t, indexS+1, indexT);
+        } else {
+            find(s, t, indexS+1, indexT);
+        }
+            
+    }
+}
+
+我的解法二： // 1.递归
+                2.考虑到这里无需备忘录，算考虑了动归。 
+                @ 也超时，超时原因估计是用递归压栈太慢
+public class Solution {
+    public int numDistinct(String s, String t) {
+        if(s == null || t == null || s.length() == 0 || t.length() == 0)
+            return 0;
+
+        int result = calculate(s, t, s.length()-1, t.length()-1); // 反序递归，注意是从末位开始，不再是从0开始
+        return result;
+    }
+    
+    public int calculate (String s, String t, int indexS, int indexT) {
+        if (indexT == -1)
+            return 1;
+        if (indexS == -1)
+            return 0;
+        if (s.charAt(indexS) == t.charAt(indexT)) {
+            return calculate(s, t, indexS-1, indexT-1) + calculate(s, t, indexS-1, indexT);
+        } else {
+            return calculate(s, t, indexS-1, indexT);
+        }
+    }
+}
+
+我的解法三： // 1.不使用递归。
+                2.用动归
+                @ 通过
+public class Solution {
+    int[][] result = null;
+    
+    public int numDistinct(String s, String t) {
+        if(s == null || t == null)
+            return 0;
+        
+        result = new int[s.length()+1][t.length()+1];
+        for(int i=0; i<=s.length(); i++)
+            result[i][0] = 1; // 注意起始条件 s=“a”和t=“”算是匹配。 
+        
+        for(int i=1; i<=s.length(); i++) // 顺序推倒
+            for(int j=1; j<=t.length(); j++) {
+                if(s.charAt(i-1) == t.charAt(j-1)) {
+                    result[i][j] = result[i-1][j] + result[i-1][j-1];
+                } else {
+                    result[i][j] = result[i-1][j];
+                }
+            }
+        return result[s.length()][t.length()];
+    }
+}
