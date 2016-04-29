@@ -1,0 +1,50 @@
+Hard:
+Given a binary tree, find the maximum path sum.
+For this problem, a path is defined as any sequence of nodes from some starting node to any node in the tree along the parent-child 
+       connections. The path does not need to go through the root.
+For example:
+Given the below binary tree,
+
+       1
+      / \
+     2   3
+Return 6.
+
+
+关键在于想清楚递归返回值，是max{leftPath+node.val, node.val, rightPath+node.val}, 别把node.val给忘了
+
+
+//我的代码
+public class Solution {
+    int bestResult;
+    
+    public int maxPathSum(TreeNode root) {
+        if (root == null)
+            return 0;
+        
+        bestResult = root.val;
+        cal(root);
+            
+        return bestResult;
+    }
+    
+    public int cal(TreeNode node) {
+        int best = node.val;
+        int leftPath = 0;
+        int rightPath = 0;
+        
+        if (node.left != null)
+            leftPath = cal(node.left);
+        if (node.right != null)
+            rightPath = cal(node.right);
+        
+        best = Math.max(best, leftPath + rightPath + node.val);
+        best = Math.max(best, leftPath + node.val);
+        best = Math.max(best, rightPath + node.val);
+        
+        if(best > bestResult)
+            bestResult = best;
+            
+        return Math.max(node.val, Math.max(leftPath + node.val, rightPath + node.val));
+    }
+}
