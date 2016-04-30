@@ -1,0 +1,39 @@
+Hard+: 题目
+Given two words (beginWord and endWord), and a dictionary's word list, find all shortest transformation sequence(s) 
+from beginWord to endWord, such that:
+
+Only one letter can be changed at a time
+Each intermediate word must exist in the word list]
+
+For example,
+Given:
+    beginWord = "hit"
+    endWord = "cog"
+    wordList = ["hot","dot","dog","lot","log"]
+Return：
+    [
+      ["hit","hot","dot","dog","cog"],
+      ["hit","hot","lot","log","cog"]
+    ]
+  
+
+说说我的思路的改变：
+1. 用dfs+回溯，对比所有word两两是否相似。
+2. 用bfs，对比所有word两两是否相似，保存到达任意结点的最短路径长度，顺序推导出所有路径。
+3. 参照别人代码，用bfs, 不再对比所有word两两是否相似，保存每条路径的反向链表，用反向链表推出所有路径。
+
+总结：
+1. 用dfs是完全没意义的，又不需要找出任意两两结点的所有路径，用bfs找出此起点终点的路径就可以。
+2. 没有必要找出所有word两两是否相似，这样会进行很多无用的计算，只需从起点word开始逐位变换，每次处理的复杂度为len(word)*26，
+   然后判断变换后的new_word是否在word_list里面。如果两两判断是否相似，复杂度是len(word_list)*len(word_list)*len(word)。
+3. 用反向map链表来反推路径，因为从起点开始推已经生成了很多树分支，其中只有部分分支到达了终点，所以从终点来反推起点效率会高很多，
+   如start->end,用map(string, set<String>)存成end->(start)
+         start
+        /     \
+       1       2
+      / \     / \
+     3   4   5  end
+  当然要用好“反向map”要注意几点，
+  第一，保证上层结点不会被低层结点建立连接，比如map里面不能存有3->1的连接，（做法：把上层结点存入set）。 
+  第二，同层之间不能有连接存放进map里面，比如1->2是不可以的
+  这样的好处在于推导end->start的所有路径都是的解，不存在其他路径长度相同但不回到start的路径。
