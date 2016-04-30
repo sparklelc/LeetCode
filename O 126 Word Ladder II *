@@ -1,0 +1,127 @@
+Hard+: 题目
+Given two words (beginWord and endWord), and a dictionary's word list, find all shortest transformation sequence(s) 
+from beginWord to endWord, such that:
+
+Only one letter can be changed at a time
+Each intermediate word must exist in the word list]
+
+For example,
+Given:
+    beginWord = "hit"
+    endWord = "cog"
+    wordList = ["hot","dot","dog","lot","log"]
+Return：
+    [
+      ["hit","hot","dot","dog","cog"],
+      ["hit","hot","lot","log","cog"]
+    ]
+  
+
+说说我的思路的改变：
+1. 用dfs+回溯，对比所有word两两是否相似。
+2. 用bfs，对比所有word两两是否相似，保存到达任意结点的最短路径长度，顺序推导出所有路径。
+3. 参照别人代码，用bfs, 不再对比所有word两两是否相似,判断某个word的所有变换，保存每条路径的反向链表，用反向链表推出所有路径。
+
+总结：
+1. 用dfs是完全没意义的，又不需要找出任意两两结点的所有路径，用bfs找出此起点终点的路径就可以。
+2. 没有必要找出所有word两两是否相似，这样会进行很多无用的计算，只需从对某个word逐位变换，每次处理的复杂度为len(word)*26，
+   然后判断变换后的new_word是否在word_list里面。如果两两判断是否相似，复杂度是len(word_list)*len(word_list)*len(word)。
+3. 用反向map链表来反推路径，因为从起点开始推已经生成了很多树分支，其中只有部分分支到达了终点，所以从终点来反推起点效率会高很多，
+   如start->end,用map(string, set<String>)存成end->(start)
+         start
+        /     \
+       1       2
+      / \     / \
+     3   4   5  end
+  当然要用好“反向map”要注意几点，
+  第一，保证上层结点不会被低层结点建立连接，比如map里面不能存有3->1的连接，（做法：把上层结点存入set）。 
+  第二，同层之间不能有连接存放进map里面，比如1->2是不可以的
+  这样的好处在于推导end->start的所有路径都是的解，不存在其他路径长度相同但不回到start的路径。
+
+
+重要：
+判断某个元素是否已经使用过可以用boolean[]，也可以用set。 看情况，如果所有元素都要判断用array[]好些，像本题明显用set比较好。
+同样，存放某个元素的相关数据可以用array[], 也可以用map, 看情况来用，如果只需处理部分元素用map要明显的好。
+
+
+其它：
+char[] = str.toCharArray();              // string -> char[]
+hashmap.containsKey(key);
+list1.addAll(Collection list2);          // 合并两个list
+list = Arrays.asList(array[]);           // array -> list
+array[] = list.toArray(new array[len]);  // list -> array
+
+
+debug技巧：
+1. 改代码的时候注意把相关的代码都要修改或者删掉。
+2. 像List<List<String>>, 新建了List<String>, 记得加进去List<List<String>>里面。
+3. 记住哪些变量是不允许修改或者保存原来的值，哪些变量是已经修改的，特别是进行“值比较”的时候。
+
+
+// 我的代码
+public class Solution {
+    public List<List<String>> findLadders(String beginWord, String endWord, Set<String> wordList) {
+        HashMap<String, HashSet<String>> hash = new HashMap<String, HashSet<String>>();
+        HashSet<String> found = new HashSet<String>();
+        
+        HashSet<String> nextStrList = new HashSet<String>();
+        nextStrList.add(beginWord);
+        boolean isFound = false;
+        while (!isFound && nextStrList.size() != 0) {
+            HashSet<String> newNextStrList = new HashSet<String>();
+            for(String str: nextStrList) {
+                for(int i=0; i<str.length(); i++) {
+                    char[] array = str.toCharArray();
+                    for(char j='a'; j<='z'; j++) {
+                        if (str.charAt(i) == j) 
+                            continue;
+                        array[i] = j;
+                        String nextStr = new String(array);
+                        
+                        if (wordList.contains(nextStr) && !found.contains(nextStr) && !nextStrList.contains(nextStr)) {
+                            newNextStrList.add(nextStr);
+                            
+                            if(hash.containsKey(nextStr))
+                                hash.get(nextStr).add(str);
+                            else {
+                                HashSet<String> list = new HashSet<String>();
+                                list.add(str);
+                                hash.put(nextStr, list);
+                            }
+                            
+                            if(nextStr.equals(endWord))
+                                isFound = true;
+                        }
+                    }
+                }
+                found.add(str);
+            }
+            nextStrList = newNextStrList;
+        }
+
+        if(nextStrList.size() == 0)
+            return new ArrayList<List<String>>();
+            
+        LinkedList<List<String>> result = new LinkedList<List<String>>();
+        LinkedList<String> tem = new LinkedList<String>();
+        tem.add(endWord);
+        result.add(tem);
+        isFound = false;
+        while (!isFound) {
+            LinkedList<List<String>> newResult = new LinkedList<List<String>>();
+            for (List<String> list: result) {
+                LinkedList<String> li = (LinkedList<String>) list;
+                for(String pre: hash.get(li.getFirst())) {
+                    LinkedList<String> newList = new LinkedList<String>(li);
+                    newList.addFirst(pre);
+                    newResult.add(newList);
+                    
+                    if(pre.equals(beginWord)) 
+                        isFound = true;
+                }
+            }
+            result = newResult;
+        }
+        return result;
+    }
+}
