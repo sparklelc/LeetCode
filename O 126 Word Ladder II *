@@ -63,7 +63,7 @@ debug技巧：
 public class Solution {
     public List<List<String>> findLadders(String beginWord, String endWord, Set<String> wordList) {
         HashMap<String, HashSet<String>> hash = new HashMap<String, HashSet<String>>();
-        HashSet<String> found = new HashSet<String>();
+        HashSet<String> found = new HashSet<String>();//没有必要用hashmap来存每个str的最短距离，用set来存有没找过就行了
         
         HashSet<String> nextStrList = new HashSet<String>();
         nextStrList.add(beginWord);
