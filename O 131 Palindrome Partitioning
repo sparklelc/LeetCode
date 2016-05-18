@@ -1,0 +1,67 @@
+Mid:
+Given a string s, partition s such that every substring of the partition is a palindrome.
+Return all possible palindrome partitioning of s.
+For example, given s = "aab",
+Return
+  [
+    ["aa","b"],
+    ["a","a","b"]
+  ]
+  
+
+我的思路：
+找出所有起点为startIndex的回文，记录他们的终点位置，存在hashmap<Integer, ArrayList<Integer>>里面
+map的key为startIndex, value为所有回文终点位置
+深度递归找出所有情况。
+
+部分人代码思路：
+差不多，只不过是用到的时候再去判断某个substring是不是回文，我是先找出所有回文位置。
+时间复杂度应该我的好一点，因为如果（i,j）不是回文，那么(i-1,j+1)也肯定不是回文。
+
+
+
+// 我的代码，一遍过
+public class Solution {
+    HashMap<Integer, ArrayList<Integer>> pos = new HashMap<Integer, ArrayList<Integer>>();
+    ArrayList<List<String>> result = new ArrayList<List<String>>();
+    
+    public List<List<String>> partition(String s) {
+        if(s == null)
+            return result;
+            
+        for (int i=0; i<s.length(); i++) {
+            findPali(s, i, i);
+            if (i+1 < s.length())
+                findPali(s, i, i+1);
+        }
+        
+        findPath(s, 0, new ArrayList<String>());
+        return result;
+    }
+    
+    public void findPali(String s, int start, int end) {
+        while (start>=0 && end<s.length() && s.charAt(start) == s.charAt(end)) {
+            if (pos.containsKey(start))
+                pos.get(start).add(end+1);
+            else{
+                ArrayList<Integer> list = new ArrayList<Integer>();
+                list.add(end+1);
+                pos.put(start, list);
+            }
+            start--;
+            end++;
+        }
+    }
+    
+    public void findPath(String s, int index, ArrayList<String> tem) {
+        if(index == s.length()) {
+            result.add(tem);
+            return;
+        }
+        for (int nextIndex: pos.get(index)) {
+            ArrayList<String> newTem = new ArrayList<String>(tem);
+            newTem.add(s.substring(index, nextIndex));
+            findPath(s, nextIndex, newTem);
+        }
+    }
+}
