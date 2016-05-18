@@ -1,0 +1,40 @@
+Easy:
+Given a binary tree containing digits from 0-9 only, each root-to-leaf path could represent a number.
+Find the total sum of all root-to-leaf numbers.
+
+For example,
+    1
+   / \
+  2   3
+The root-to-leaf path 1->2 represents the number 12.
+The root-to-leaf path 1->3 represents the number 13.
+Return the sum = 12 + 13 = 25.
+
+
+
+题目不难：
+用DFS，注意只能从“上往下找”全部路径，不能“从下往上”合并  ！！
+
+
+
+//我的代码
+public class Solution {
+    public int result = 0;
+    public int sumNumbers(TreeNode root) {
+        if (root == null)
+            return 0;
+        findPath(root, 0);
+        return result;
+    }
+    
+    public void findPath(TreeNode root, int sum) {
+        if (root.left == null && root.right == null) {
+            result += sum*10 + root.val;
+            return;
+        }
+        if (root.left != null) 
+            findPath(root.left, sum*10 + root.val);
+        if (root.right != null)
+            findPath(root.right, sum*10 + root.val);
+    }
+}
