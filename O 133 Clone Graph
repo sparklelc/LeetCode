@@ -1,0 +1,33 @@
+133 Easy:
+Clone an undirected graph. Each node in the graph contains a label and a list of its neighbors.
+/**
+ * Definition for undirected graph.
+ * class UndirectedGraphNode {
+ *     int label;
+ *     List<UndirectedGraphNode> neighbors;
+ *     UndirectedGraphNode(int x) { label = x; neighbors = new ArrayList<UndirectedGraphNode>(); }
+ * };
+ */
+ 
+ 
+ 用hashmap存，在hashmap找不到的情况下再新建节点
+ 
+ 
+ 我的代码：
+ public class Solution {
+    HashMap<Integer, UndirectedGraphNode> map = new HashMap<Integer, UndirectedGraphNode>();
+    public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
+        if (node == null)
+            return null;
+        if (!map.containsKey(node.label)) {
+            UndirectedGraphNode newNode = new UndirectedGraphNode(node.label);
+            map.put(node.label, newNode);
+            for(UndirectedGraphNode eachNode: node.neighbors) {
+                newNode.neighbors.add(cloneGraph(eachNode));
+            }
+            return newNode;
+        } else {
+            return map.get(node.label);
+        }
+    } 
+}
