@@ -1,0 +1,74 @@
+133 Easy:
+Clone an undirected graph. Each node in the graph contains a label and a list of its neighbors.
+/**
+ * Definition for undirected graph.
+ * class UndirectedGraphNode {
+ *     int label;
+ *     List<UndirectedGraphNode> neighbors;
+ *     UndirectedGraphNode(int x) { label = x; neighbors = new ArrayList<UndirectedGraphNode>(); }
+ * };
+ */
+ 
+ 
+ 用hashmap存，在hashmap找不到的情况下再新建节点
+ 
+ 
+ 我的代码：
+ public class Solution {
+    HashMap<Integer, UndirectedGraphNode> map = new HashMap<Integer, UndirectedGraphNode>();
+    public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
+        if (node == null)
+            return null;
+        if (!map.containsKey(node.label)) {
+            UndirectedGraphNode newNode = new UndirectedGraphNode(node.label);
+            map.put(node.label, newNode);
+            for(UndirectedGraphNode eachNode: node.neighbors) {
+                newNode.neighbors.add(cloneGraph(eachNode));
+            }
+            return newNode;
+        } else {
+            return map.get(node.label);
+        }
+    } 
+}
+
+
+
+
+
+
+134 Mid:
+There are N gas stations along a circular route, where the amount of gas at station i is gas[i].
+You have a car with an unlimited gas tank and it costs cost[i] of gas to travel from station i to its next station (i+1). 
+You begin the journey with an empty tank at one of the gas stations.
+Return the starting gas station's index if you can travel around the circuit once, otherwise return -1.
+
+
+O(n)解法：
+做图后可以很明显的发现选择起点其实就是把sum函数上下移动，所以我们应该选择一个起点使得整个函数保持在x轴上方
+也就是选择增量函数的最低点的下一位作为起点
+比如gas[i] - cost[i]是[-1, 1, -2, 2]
+sum函数是[-1, 0, -2, 0]
+选择-2的下一位作为起点开始。
+
+
+我的代码：
+public class Solution {
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        if (gas == null || cost == null)
+            return 0;
+        
+        int min = 0;
+        int sum = 0;
+        int index = -1;
+        for(int i = 0; i < gas.length; i++) {
+            sum += gas[i] - cost[i];
+            if (sum < min) {
+                index = i;
+                min = sum;
+            }
+        }
+        index = index == gas.length-1? 0: index+1;
+        return sum >= 0 ? index : -1;
+    }
+}
