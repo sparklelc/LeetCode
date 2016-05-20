@@ -1,0 +1,101 @@
+Hard:
+Given a string s, partition s such that every substring of the partition is a palindrome.
+Return the minimum cuts needed for a palindrome partitioning of s.
+For example, given s = "aab",
+Return 1 since the palindrome partitioning ["aa","b"] could be produced using 1 cut.
+
+
+题目和上题有点相似，但做法完全不同
+先说下我的思路：
+1. 因为求最短，用BFS
+2. 判断任何[i, j]都需要判断[i+1, j-1], [i+2, j-2]等等，为了避免重复判断，可以发现这些段都是从同一个中间点开始向外扩展的。
+   所以直接记录这个中间点有没遍历过来确定，如果是一个新的中间点则尝试其所有长度的扩展。（其实也会做一些无用功，但比动归好一点）
+3. 我是第一次先尝试[0, s.length()-1]，把所有[0, y1]是回文的y1给找出来，压入栈中。第二轮中继续遍历栈里面的元素，找所有[y1, y2]。
+
+
+别人思路
+1. 用动归来做（在最坏情况下，如“aaaaaa”的效率没有BFS高，动归其实是把所有[i,j]是否为回文都判断了一遍）
+2. 同样要判断[i, j]只需判断[i+1, j-1]是否回文以及s[i]==s[j]
+3. 固定j，然后i从0到j，用步骤2去判断[i,j]是否为回文
+   然后j++
+   因为j每次左边的所有所有情况都被判断过，所以可以去接去动归数组找[i+m, j-n]是否为回文
+   
+
+
+
+
+别人代码：
+public class Solution {
+    public int minCut(String s) {
+        char[] c = s.toCharArray();
+        int n = c.length;
+        int[] cut = new int[n];
+        boolean[][] pal = new boolean[n][n];
+    
+        for(int i = 0; i < n; i++) {
+            int min = i;
+            for(int j = 0; j <= i; j++) {
+                if(c[j] == c[i] && (j == i || j + 1 == i || pal[j + 1][i - 1])) {
+                    pal[j][i] = true;  
+                    min = (j == 0)? 0 : Math.min(min, cut[j - 1] + 1);
+                }
+            }
+            cut[i] = min;
+        }
+        return cut[n - 1];
+    }
+}
+
+
+我的代码：
+public class Solution {
+    int[][] pos = null;
+    
+    public int minCut(String s) {
+        if (s == null || s.length() == 0)
+            return 0;
+
+        boolean[] found = new boolean[s.length()+1];
+        boolean[][] foundMid = new boolean[s.length()][s.length()];
+        pos = new int[s.length()+1][s.length()+1];
+        
+        LinkedList<Integer> level = new LinkedList<Integer>();
+        level.add(0);
+        found[0] = true;
+        int cut = 0;
+        while (level.size() != 0) {
+            LinkedList<Integer> newLevel = new LinkedList<Integer>();
+            for (int index: level) {
+                int start = index;
+                for (int j=s.length()-1; j>=start; j--) {
+                    int midLeft = (j+start)/2;
+                    int midRight = (j+start)%2 == 0 ? midLeft: midLeft+1;
+                    boolean isPali = true;
+                    if (!foundMid[midLeft][midRight]) {
+                        foundMid[midLeft][midRight] = true;
+                        while (midLeft >= 0 && midRight <= s.length()-1) {
+                            if (isPali && s.charAt(midLeft) != s.charAt(midRight)) {
+                                isPali = false;
+                            }
+                            pos[midLeft][midRight+1] = isPali? 1:2;
+                            if (midRight+1 == s.length() && midLeft == start && pos[midLeft][midRight+1] == 1)
+                                return cut;
+                            midLeft--;
+                            midRight++;
+                        }
+                    }
+                }
+        
+                for (int nextIndex=index; nextIndex<=s.length(); nextIndex++) {
+                    if (pos[index][nextIndex] == 1 && !found[nextIndex]) {
+                        newLevel.add(nextIndex);
+                        found[nextIndex] = true;
+                    }
+                }
+            }
+            cut++;
+            level = newLevel;
+        }
+        return cut;
+    }
+}
