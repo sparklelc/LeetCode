@@ -1,0 +1,59 @@
+136 Mid:
+Given an array of integers, every element appears twice except for one. Find that single one.
+找出数组里面唯一没有重复两次的元素。
+
+
+思路：
+用异或操作
+java里面int类型可以直接用异或操作
+
+
+我的代码：
+public class Solution {
+    public int singleNumber(int[] nums) {
+        int result = 0;
+        for (int i=0; i<nums.length; i++)
+            result ^= nums[i];
+        return result;
+    }
+}
+
+
+######################################################
+######################################################
+######################################################
+
+
+137 Mid:
+Given an array of integers, every element appears three times except for one. Find that single one.
+iven an array of integers, every element appears twice except for one. Find that single one.
+找出数组里面唯一没有重复三次的元素。
+
+
+思路： 比如把3（即011）压入三次          one存出现一次的数，two存出现两次的，three存出现三次的
+one:    011     000     000
+two:    000     011     000
+three   000     000     011
+
+
+
+别人代码：
+class Solution {
+public:
+    int singleNumber(int A[], int n) {
+        int one,two,three;
+        one=two=three=0;
+        for(int i=0;i<n;i++)
+        {
+            //一定是出现3次，2次，1次这样的顺序，如果反过来的话，先更新了one的话，会影响到two和three的
+            three =  two & A[i];                     //已经出现了两次，还出现了一次
+            two =    two | (one & A[i]);             //出现了1次又出现了1次，在加上以前已经出现了2次的，为新的出现了2次的
+            one =    one | A[i];                     //出现了1次
+            
+            //将出现3次的其出现1次2次全部抹去
+            one = one & ~three;
+            two = two & ~three;
+        }
+         return one;
+    }
+};
