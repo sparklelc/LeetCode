@@ -1,0 +1,20 @@
+Mid:
+Given an array of integers, every element appears twice except for one. Find that single one.
+找出数组里面唯一没有重复的元素。
+
+
+思路：
+用异或操作
+java里面int类型可以直接用异或操作
+
+
+
+我的代码：
+public class Solution {
+    public int singleNumber(int[] nums) {
+        int result = 0;
+        for (int i=0; i<nums.length; i++)
+            result ^= nums[i];
+        return result;
+    }
+}
