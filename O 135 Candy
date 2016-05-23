@@ -1,0 +1,45 @@
+Hard:
+There are N children standing in a line. Each child is assigned a rating value.
+You are giving candies to these children subjected to the following requirements:
+  1. Each child must have at least one candy.
+  2. Children with a higher rating get more candies than their neighbors.
+What is the minimum candies you must give?
+
+
+思路：
+如 2-3-3-3-3 应该返回 1+2+1+1+1=6
+1. 直接判断较难理解，看网上有从左到右遍历一次，然后用修正值的概念来做。
+2. 这题让我想起之前做的一个求水容量的题目，从左边动归遍历一次，从右边动归遍历一次。
+   因为题目是ratings值大的要比邻居多拿，
+   可以分成ratings值比左边大的要比左邻居多拿，ratings值比右边大的要比右邻居多拿，否则只拿一个。
+   
+
+我的代码：
+public class Solution {
+    public int candy(int[] ratings) {
+        int[] left = new int[ratings.length];
+        int[] right = new int[ratings.length];
+        
+        for (int i = 0; i < ratings.length; i++) {
+            if (i == 0 || ratings[i-1] >= ratings[i]) {
+                left[i] = 1;
+                continue;
+            } else
+                left[i] = left[i-1]+1;
+        }
+        
+        for (int i = ratings.length - 1; i>=0; i--) {
+            if (i == ratings.length-1 || ratings[i+1] >= ratings[i]) {
+                right[i] = 1;
+                continue;
+            } else
+                right[i] = right[i+1] + 1;
+                
+        }
+        
+        int sum = 0;
+        for (int i=0; i<ratings.length; i++) 
+            sum += Math.max(left[i], right[i]);
+        return sum;
+    }
+}
