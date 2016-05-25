@@ -1,0 +1,31 @@
+139 Mid:
+Given a string s and a dictionary of words dict, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
+
+For example, given
+s = "leetcode",
+dict = ["leet", "code"].
+Return true because "leetcode" can be segmented as "leet code".
+
+
+思路:
+1. KMP肯定是不可以的，因为“aa”可能在“aaaaaaa”中出现了多次，难以记录所有位置。
+   我的思路是用递归解，但问题是递归中会有很多重复的判断。
+2. 用动归解，能否匹配[0, end]起决于[0, mid]是否能匹配以及substring(mid, end)是否在WordSet里面
+
+
+参照别人我的代码：
+public class Solution {
+    public boolean wordBreak(String s, Set<String> wordDict) {
+        boolean[] isReach = new boolean[s.length() + 1];
+        isReach[0] = true;
+        
+        for (int end = 1; end<=s.length(); end++) {
+            for (int start=0; start<end; start++) {
+                if (isReach[start] && wordDict.contains(s.substring(start, end))) {
+                    isReach[end] = true;
+                }
+            }
+        }
+        return isReach[s.length()];
+    }
+}
