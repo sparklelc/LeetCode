@@ -1,0 +1,102 @@
+139 Mid:
+Given a string s and a dictionary of words dict, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
+
+For example, given
+s = "leetcode",
+dict = ["leet", "code"].
+Return true because "leetcode" can be segmented as "leet code".
+
+
+思路:
+1. KMP肯定是不可以的，因为“aa”可能在“aaaaaaa”中出现了多次，难以记录所有位置。
+   我的思路是用递归解（倒序），但问题是递归中会有很多重复的判断。
+2. 用动归解（顺序），能否匹配[0, end]起决于[0, mid]是否能匹配以及substring(mid, end)是否在WordSet里面
+3. 可以参照下题用备忘录+DFS, 比动归好。
+
+
+参照别人我的代码：
+public class Solution {
+    public boolean wordBreak(String s, Set<String> wordDict) {
+        boolean[] isReach = new boolean[s.length() + 1];
+        isReach[0] = true;
+        
+        for (int end = 1; end<=s.length(); end++) {
+            for (int start=0; start<end; start++) {
+                if (isReach[start] && wordDict.contains(s.substring(start, end))) {
+                    isReach[end] = true;
+                }
+            }
+        }
+        return isReach[s.length()];
+    }
+}
+
+
+#######################################################
+#######################################################
+#######################################################
+
+140 Mid:
+Given a string s and a dictionary of words dict, add spaces in s to construct a sentence where each word is a valid dictionary word.
+Return all such possible sentences.
+
+For example, given
+s = "catsanddog",
+dict = ["cat", "cats", "and", "sand", "dog"].
+A solution is ["cats and dog", "cat sand dog"].
+
+
+
+
+我的思路：
+动归
+1. 参照上一题，用hashmap<Integer, ArrayList<String>>存每个位置的所有结果，超时。
+2. 改成反向索引， 用hashmap<Integer, ArrayList<Integer>>存每个位置的前序位置序号，最后反向推导出所有情况，pass。
+
+
+别人思路：
+用hashmap实现备忘录 + DFS （备忘录+DFS复杂度比动归好，可能可以减少了一些无用判断）
+result[start, s.length()] = s.substring(start, mid) + foreach(result[mid, s.length()])
+即如果能找到s.substring(start, mid)在wordSet里面, 再去找[mid, s.length()]的所有情况，拼接成[start, s.length()]的所有情况
+
+
+////我的代码：
+public class Solution {
+    HashMap<Integer, ArrayList<Integer>> map = new HashMap<Integer, ArrayList<Integer>>();
+    public List<String> wordBreak(String s, Set<String> wordDict) {
+        if (s == null || (s.equals("") && !wordDict.contains("")))
+            return new ArrayList<String>();
+        boolean[] isReach = new boolean[s.length()+1];
+        isReach[0] = true;
+        
+        for (int end=1; end<=s.length(); end++) {
+            for (int start=0; start<end; start++) {
+                if (isReach[start] && wordDict.contains(s.substring(start, end))) {
+                    isReach[end] = true;
+                    ArrayList<Integer> temList = map.containsKey(end)? map.get(end): new ArrayList<Integer>();
+                    temList.add(start);
+                    map.put(end, temList);
+                }
+            }
+        }
+        
+        if (!isReach[s.length()])
+            return new ArrayList<String>();
+        
+        return generateList(s, s.length());
+    }
+    
+    public ArrayList<String> generateList(String s, int index) {
+        ArrayList<String> result = new ArrayList<String>();
+        for (Integer start: map.get(index)) {
+            if (start != 0) {
+                ArrayList<String> startList = generateList(s, start);
+                for (String str: startList)
+                    result.add(str + " " + s.substring(start, index));
+            } else {
+                result.add(s.substring(start, index));
+            }
+        }
+        return result;
+    }
+}
