@@ -1,0 +1,66 @@
+Mid:
+Given a singly linked list L: L0→L1→…→Ln-1→Ln,
+reorder it to: L0→Ln→L1→Ln-1→L2→Ln-2→…
+You must do this in-place without altering the nodes' values.
+
+For example,
+Given {1,2,3,4}, reorder it to {1,4,2,3}.
+
+
+思路：
+1. 一开始做法超时了，操作次数过多，一开始的思路是插入Ln只是把Ln-1，Ln-2向后移动，所以每插入一个数字都要进行很复杂操作。
+2. 参照网上别人用的三次遍历方法：
+   第一次： 找出中间节点位置  如1-2-3-4-5-6找出3
+   第二次： 将中间结点后面的链表进行倒序 如1-2-3-4-5-6转成1-2-3-6-5-4
+   第三次： 间隔取“1-2-3” + “6-5-4” = “1-6-2-5-3-4”
+            （把中间节点的next设为Null，更容易做处理判断，不容易出错）
+   
+   
+   
+   
+// 参照别人思路我的代码
+// 在第三次上debug了太久，指针指向没弄清，最后把中间节点的next设为Null容易处理些
+public class Solution {
+    public void reorderList(ListNode head) {
+        if (head == null || head.next == null)
+            return;
+        
+        ListNode next = head;                        // 第一次
+        ListNode mid = head;
+        while (next != null) {
+            next = next.next;
+            if (next == null)
+                break;
+            else
+                next = next.next;
+            if (next != null)
+                mid = mid.next;
+        }
+        
+        next = mid.next;                             // 第二次
+        mid.next = null;
+        ListNode nextNext = null;
+        while (next != null) {
+            nextNext = next.next;
+            next.next = mid.next;
+            mid.next = next;
+            next = nextNext;
+        }
+        
+        ListNode middle = mid;                        //  第三次
+        next = head;
+        mid = mid.next;
+        middle.next = null;                           // 把中间断开更好判断
+        ListNode tem = null;
+        while (next != null) {
+            nextNext = next.next;
+            next.next = mid;
+            if (mid == null)
+                break;
+            tem = mid.next;
+            mid.next = nextNext;
+            mid = tem;
+            next = nextNext;
+        }
+    }
+}
