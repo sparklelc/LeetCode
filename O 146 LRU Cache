@@ -1,0 +1,102 @@
+Hard:
+Design and implement a data structure for Least Recently Used (LRU) cache. It should support the following operations: get and set.
+get(key)        - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.
+                  Get操作也需要更新cache数据的时间
+set(key, value) - Set or insert the value if the key is not already present. When the cache reached its capacity, 
+                  it should invalidate the least recently used item before inserting a new item.
+             
+                  
+1. 我一开始的思路是用heap + hashmap，通过heap来找最小元素，复杂度是O(log n)
+2. 看了网上别人的思路，直接用linkedDeque + hashmap，复杂度只有O(1)
+   在每个节点里有pre和next指针指向前一个和后一个元素
+   linkedDeque的head是最新内容，tail是历史最久的内容
+   
+*后面附api知识点
+
+
+// 参照别人思路，我的代码如下：
+public class LRUCache {
+    HashMap<Integer, Node> map = new HashMap<Integer, Node>();
+    Node head = null;  //或则创建两个新节点专门作为head和tail来保证他们两不会为null，减少为null的判断
+    Node tail = null;
+    int capacity;
+    int size;
+    
+    class Node {
+        int key;
+        int value;
+        Node pre;
+        Node next;
+        public Node (int k, int v) {
+            key = k;
+            value = v;
+        }
+    }
+    
+    public void insertNode(Node node) {
+        map.put(node.key, node);
+        if (head == null && tail == null) {
+            head = node;
+            tail = node;
+        } else {
+            node.next = head;
+            head.pre = node;
+            head = head.pre;
+        }
+    }
+    
+    public void removeNode(Node node) {
+        map.remove(node.key);
+        if (node == head && node == tail) {
+            head = null;
+            tail = null;
+        } else if (node == head) {
+            head = node.next;
+            head.pre = null;
+        } else if (node == tail) {
+            tail = node.pre;
+            tail.next = null;
+        } else {
+            node.pre.next = node.next;
+            node.next.pre = node.pre;
+        }
+    }
+    
+    public LRUCache(int capacity) {
+        this.size = 0;
+        this.capacity = capacity;
+    }
+    
+    public int get(int key) {
+        Node node = map.get(key);
+        if (node == null)
+            return -1;
+        removeNode(node);
+        insertNode(node);
+        return node.value;
+    }
+    
+    public void set(int key, int value) {
+        if (map.containsKey(key)) {
+            Node node = map.get(key);
+            node.value = value;
+            removeNode(node);
+            insertNode(node);
+        } else {
+            if (size == capacity) {
+                removeNode(tail);
+                size--;
+            }
+            Node node = new Node(key, value);
+            insertNode(node);
+            size++;
+        }
+    }
+}
+
+1. PriorityQueue   基于最小堆
+   构造函数可以传一个Comparator<E>进去，需要override Comparator<E>的 int compare(E e1, E e2)方法
+   返回大于0的数表示e1 > e2。
+2. 在java中，不能通过直接通过T[] arr = new T[10]的方式来创建数组
+   要写成T[] arr = (T[]) new Object[10]; 
+   要写成T[] arr = (T[]) Array.newInstance(Class<t> type,int size)
