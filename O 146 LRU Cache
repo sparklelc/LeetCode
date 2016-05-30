@@ -100,3 +100,6 @@ public class LRUCache {
 2. 在java中，不能通过直接通过T[] arr = new T[10]的方式来创建数组
    要写成T[] arr = (T[]) new Object[10]; 
    要写成T[] arr = (T[]) Array.newInstance(Class<t> type,int size)
+3. 堆操作大体分为向上做和向下做
+   如删根结点后移动最后一个结点到根---“向下做”； 某个值变大---“向下做”； 无序数组构造堆---“一半元素向下做”
+   如某个值变小---“向下做”
