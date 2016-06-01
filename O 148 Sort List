@@ -1,0 +1,71 @@
+Mid:
+Sort a linked list in O(n log n) time using constant space complexity.
+
+
+思路：
+我的第一想法是使用快排，结果超时了，主要是它的测试用例太特别，很多元素的值是相同的。
+对快排进行修改，把和中间节点值相等的全部放在中间，分成三部分left, mid（不再是一个值）, right。
+
+
+
+// beat 93.54%
+我的代码：
+public class Solution {
+    class DeNode {                            //记录每一段列表的头和尾位置
+        ListNode head;
+        ListNode tail;
+        public DeNode(ListNode h, ListNode t) {
+            this.head = h;
+            this.tail = t;
+        }
+    }
+    
+    public ListNode sortList(ListNode head) {
+        DeNode result = fastSort(head);
+        return result.head;
+    }
+    
+    public DeNode fastSort(ListNode head) {
+        if (head == null)
+            return new DeNode(null, null);
+            
+        ListNode next = head.next;
+        ListNode item = head;
+        item.next = null;
+        ListNode itemIndex = item;
+        ListNode left = new ListNode(0);
+        ListNode leftIndex = left;
+        ListNode right = new ListNode(0);
+        ListNode rightIndex = right;
+        
+        while (next != null) {
+            ListNode nextNext = next.next;
+            if (next.val < item.val) {
+                leftIndex.next = next;
+                leftIndex = next;
+            } else if (next.val == item.val) {
+                itemIndex.next = next;
+                itemIndex = next;
+            } else {
+                rightIndex.next = next;
+                rightIndex = next;
+            }
+            next.next = null;
+            next = nextNext;
+        }
+        
+        DeNode midResult = new DeNode(item, itemIndex);
+        DeNode leftResult = fastSort(left.next);
+        DeNode rightResult = fastSort(right.next);
+        
+        if (leftResult.head != null) {
+            leftResult.tail.next = midResult.head;
+            midResult.head = leftResult.head;
+        }
+        if (rightResult.head != null) {
+            midResult.tail.next = rightResult.head;
+            midResult.tail = rightResult.tail;
+        } 
+        return midResult;
+    }
+}
