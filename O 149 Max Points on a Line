@@ -1,0 +1,122 @@
+Hard:
+Given n points on a 2D plane, find the maximum number of points that lie on the same straight line.
+给出n个点，找出一条直线上最多的元素个数。
+
+
+我的思路：
+这题似乎对时间复杂度要求不高
+计算两两点之间构成的直线的所有k和b的情况，用这些k和b构成的每条直线判断所有的点是否在上面，时间复杂度O(n^3)
+
+别人思路：
+选定一个点，分别计算其他点和它构成的直线的斜率，斜率相同的点肯定在同一条直线上。
+从某个点出发和其它点相连，则只需要记录k，无需记录b，用hashmap保存<k, count>，时间复杂度O(n^2)
+
+
+
+
+我的代码：   //考虑了double不精确的问题，但是好像可以不考虑
+class Node {
+    int k2;
+    int b2;
+    public Node (int k, int b) {
+        this.k2 = k;
+        this.b2 = b;
+    }
+}
+ 
+public class Solution {
+    public int maxPoints(Point[] points) {
+        if (points.length == 0) 
+            return 0;
+            
+        HashMap<Integer, ArrayList<Node>> map = new HashMap<Integer, ArrayList<Node>>();
+        for (int i=0; i<points.length; i++) {
+            for (int j=i+1; j<points.length; j++) {
+                if (points[i].x == points[j].x)
+                    continue;
+                int k1 = points[i].x-points[j].x;
+                int k2 = points[i].y-points[j].y;
+                int b2 = points[i].x*points[j].y - points[i].y*points[j].x;
+                Node node = new Node(k2, b2);
+                
+                if (map.containsKey(k1))
+                    map.get(k1).add(node);
+                else {
+                    ArrayList<Node> list = new ArrayList<Node>();
+                    list.add(node);
+                    map.put(k1, list);
+                }
+            }
+        }
+        
+        int max = 0;
+        for (Map.Entry<Integer, ArrayList<Node>> entry: map.entrySet()) {    // 用Map.Entry进行遍历
+            double k = entry.getKey();
+            ArrayList<Node> list = entry.getValue();
+            for (Node node: list) {
+                int count = 0;
+                for (Point p: points) {
+                    if (p.y * k == p.x * node.k2 + node.b2) {
+                        count ++;
+                    }
+                }
+                max = Math.max(max, count);
+            }
+        }
+        
+        int tem = 0;
+        HashMap<Integer, Integer> countTime = new HashMap<Integer, Integer>();
+        for (Point p:points) {
+            if (countTime.containsKey(p.x)) {
+                int count = countTime.get(p.x);
+                tem = Math.max(tem, count + 1);
+                countTime.put(p.x, count+1);
+            } else {
+                tem = Math.max(1, tem);
+                countTime.put(p.x, 1);
+            }
+        }
+        return Math.max(tem, max);
+    }
+}
+
+别人代码：
+public class Solution {  
+    public int maxPoints(Point[] points) {  
+          
+        if (points.length < 3) return points.length;  
+          
+        int max = 0;//用于返回的结果，即共线点的最大个数  
+        Map<Double, Integer> map = new HashMap<Double, Integer>();//保存同一个斜率的点的个数  
+          
+        for (int i = 0; i < points.length; i++) {//以每一个点为固定点  
+            map.clear();  
+            int duplicate = 1;//记录跟固定点重合的个数  
+              
+            for(int j = 0 ; j < points.length; j++){//遍历其他点，求其与固定点之间的斜率  
+                if (i == j) continue;//如果是自己，跳过  
+                double slope = 0.0;//斜率  
+                  
+                if (points[i].x == points[j].x && points[i].y == points[j].y) {//如果跟固定点重合  
+                    duplicate++;  
+                    continue;  
+                } else if (points[i].x == points[j].x) {//如果跟固定点在同一条竖线上，斜率设为最大值  
+                    slope = Integer.MAX_VALUE;  
+                } else {//计算该点与固定点的斜率  
+                    slope = 1.0 * (points[i].y - points[j].y) / (points[i].x - points[j].x);  
+                }  
+                map.put(slope, map.containsKey(slope) ? map.get(slope) + 1 : 1);  
+            }  
+              
+            //更新最优解  
+            if (map.keySet().size() == 0) {//如果map为空  
+                max = duplicate > max ? duplicate : max;  
+            } else {  
+                for (double key : map.keySet()) {  
+                    max = Math.max((duplicate + map.get(key)), max);   
+                }  
+            }  
+        }  
+        return max;  
+    }  
+} 
