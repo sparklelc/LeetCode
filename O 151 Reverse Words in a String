@@ -1,0 +1,68 @@
+Mid:
+Given an input string, reverse the string word by word.
+
+For example,
+Given s = "   the sky   is blue   "
+return "blue is sky the"
+
+
+不难,判断空格就好.
+
+
+
+我的代码:
+public class Solution {
+    public String reverseWords(String s) {
+        LinkedList<String> result = new LinkedList<String>();
+        StringBuilder builder = new StringBuilder();
+        int lastIndex = 0;
+        boolean hasChar = false;
+        for (int i=0; i<=s.length(); i++) {
+            if (i == s.length() || s.charAt(i) == ' ') {
+                if (hasChar) {
+                    result.addFirst(s.substring(lastIndex, i));
+                    hasChar = false;
+                }
+                lastIndex = i;
+            } else {
+                if (!hasChar && s.charAt(lastIndex) == ' ')
+                    lastIndex = i;
+                hasChar = true;
+            }
+        }
+        
+        while (result.size() != 0) {
+            String str = result.pollFirst();
+            builder.append(str);
+            if (result.size() != 0)
+                builder.append(" ");
+        }
+        
+        return builder.toString();
+    }
+}
+
+别人代码:
+String[] parts = s.trim().split("\\s+");
+String out = "";
+for (int i = parts.length - 1; i > 0; i--) {
+    out += parts[i] + " ";
+}
+return out + parts[0];
+
+
+
+*****************************************
+*****************************************
+150	Evaluate Reverse Polish Notation
+
+Easy:
+Evaluate the value of an arithmetic expression in Reverse Polish Notation.
+Valid operators are +, -, *, /. Each operand may be an integer or another expression.
+Some examples:
+  ["2", "1", "+", "3", "*"] -> ((2 + 1) * 3) -> 9
+  ["4", "13", "5", "/", "+"] -> (4 + (13 / 5)) -> 6
+  
+  
+  
+用stack来做
