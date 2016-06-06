@@ -1,0 +1,98 @@
+Mid:
+Write a program to find the node at which the intersection of two singly linked lists begins.
+For example, the following two linked lists:
+
+A:          a1 → a2
+                   ↘
+                     c1 → c2 → c3
+                   ↗            
+B:     b1 → b2 → b3
+begin to intersect at node c1.
+
+题目： 找两个链表的第一个交点
+
+
+
+
+别人思路：
+一个从headA走，走到尽头从headB开始走，每次走一格
+另一个从headB走，走到尽头从headA开始走，每次走一格
+路径分析可以知道第一个相遇点就是交点。
+
+
+
+我的思路：
+1. 判断有没相交
+2. 构成环（非显性把节点连接起来，而是判断为null的时候切换到head），一个快节点一个慢节点
+
+
+
+
+
+//别人代码：
+public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+    if(headA == null || headB == null) return null;
+
+    ListNode a = headA;
+    ListNode b = headB;
+
+    while( a != b){
+        a = a == null? headB : a.next;
+        b = b == null? headA : b.next;    
+    }
+
+    return a;
+}
+
+//我的代码：
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if (headA == null || headB == null)
+            return null;
+        else if (headA == headB)
+            return headA;
+        
+        ListNode nextA = headA;
+        while (nextA.next != null)
+            nextA = nextA.next;
+            
+        ListNode next = headB;
+        while (next.next != null)
+            next = next.next;
+        
+        if (next != nextA)
+            return null;
+        
+        ListNode fast = headA;
+        ListNode slow = headA;
+        boolean firstTime = true;
+        while (fast != slow || firstTime) {
+            for (int i=1; i<=2; i++)
+                if (fast.next != null)
+                    fast = fast.next;
+                else
+                    fast = headB;
+                    
+            if (slow.next != null)    
+                slow = slow.next;
+            else
+                slow = headB;
+            firstTime = false;
+        }
+        
+        slow = headA;
+        while (slow != fast) {
+            if (fast.next != null)
+                fast = fast.next;
+            else
+                fast = headB;
+                
+            if (slow.next != null)    
+                slow = slow.next;
+            else
+                slow = headB;
+        }
+        
+        return slow;
+    }
+}
