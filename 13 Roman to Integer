@@ -1,0 +1,165 @@
+Easy:
+Given a roman numeral, convert it to an integer.
+Input is guaranteed to be within the range from 1 to 3999.
+
+我的思路:
+1/10/100/1000开头只有5种情况:
+I    II    III   IV    IX
+5/50/500开头的只有4种情况：
+V    VI    VII  VIII
+
+
+//别人代码：
+public class Solution {
+    public int romanToInt(String s) {
+        // I（1）V（5）X（10）L（50）C（100）D（500）M（1000） 
+        // rules:位于大数的后面时就作为加数；位于大数的前面就作为减数
+
+        if(s == null || s.length() == 0) return 0;
+        int len = s.length();
+        HashMap<Character,Integer> map = new HashMap<Character,Integer>();
+        map.put('I',1);
+        map.put('V',5);
+        map.put('X',10);
+        map.put('L',50);
+        map.put('C',100);
+        map.put('D',500);
+        map.put('M',1000);
+        int result = map.get(s.charAt(len -1));
+        int pivot = result;
+        for(int i = len -2; i>= 0;i--){
+            int curr = map.get(s.charAt(i));
+            if(curr >=  pivot){
+                result += curr;
+            }else{
+                result -= curr;
+            }
+            pivot = curr;
+        }
+        return result;
+    }
+}
+
+//我的代码：
+public class Solution {
+    HashMap<Character, Integer> map1 = new HashMap();
+    HashMap<Character, Integer> map5 = new HashMap();
+    public int romanToInt(String s) {
+        map1.put('I', 1);
+        map5.put('V', 5);
+        map1.put('X', 10);
+        map5.put('L', 50);
+        map1.put('C', 100);
+        map5.put('D', 500);
+        map1.put('M', 1000);
+        
+        int result = 0;
+        for (int i=0; i < s.length();) {
+            if (map1.containsKey(s.charAt(i))){
+                if (s.length() > i + 1 && s.charAt(i) == s.charAt(i+1)) {
+                    if (s.length() > i + 2 && s.charAt(i) == s.charAt(i+2)) {
+                        result += map1.get(s.charAt(i))*3;
+                        i = i + 3;
+                    } else {
+                        result += map1.get(s.charAt(i))*2;
+                        i = i + 2;
+                    }
+                } else if (s.length() > i + 1 && map5.containsKey(s.charAt(i+1)) && 
+                        map5.get(s.charAt(i+1))/map1.get(s.charAt(i)) == 5) {
+                    result += map1.get(s.charAt(i))*4;
+                    i = i + 2;  
+                } else if (s.length() > i + 1 && map1.containsKey(s.charAt(i+1)) && 
+                        map1.get(s.charAt(i+1))/map1.get(s.charAt(i)) == 10) {
+                    result += map1.get(s.charAt(i))*9;
+                    i = i + 2;  
+                } else {
+                    result += map1.get(s.charAt(i));
+                    i = i + 1; 
+                }
+            } else {
+                if (s.length() > i + 1 && map1.containsKey(s.charAt(i+1)) && 
+                        map5.get(s.charAt(i))/map1.get(s.charAt(i+1)) == 5) {
+                    if (s.length() > i + 2 && map1.containsKey(s.charAt(i+2)) && 
+                            map5.get(s.charAt(i))/map1.get(s.charAt(i+2)) == 5) {
+                        if (s.length() > i + 3 && map1.containsKey(s.charAt(i+3)) && 
+                                map5.get(s.charAt(i))/map1.get(s.charAt(i+3)) == 5) {
+                            result += map5.get(s.charAt(i))/5*8;
+                            i = i + 4;
+                        } else {
+                            result += map5.get(s.charAt(i))/5*7;
+                            i = i + 3;
+                        }
+                    } else {
+                        result += map5.get(s.charAt(i))/5*6;
+                        i = i + 2;
+                    }
+                } else {
+                    result += map5.get(s.charAt(i));
+                    i = i + 1;
+                }
+            }
+        }
+        return result;
+    }
+}
+
+
+
+
+*********************************
+
+题目 12： Integer to Roman
+Given an integer, convert it to a roman numeral.
+Input is guaranteed to be within the range from 1 to 3999.
+
+// 别人代码：
+    public static String intToRoman(int num) {
+        String M[] = {"", "M", "MM", "MMM"};
+        String C[] = {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
+        String X[] = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+        String I[] = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+        return M[num/1000] + C[(num%1000)/100] + X[(num%100)/10] + I[num%10];
+    }
+    
+// 我的代码：
+public class Solution {
+    HashMap<Integer, String> map = new HashMap();
+    public String intToRoman(int num) {
+        map.put(0, "");
+        map.put(1, "I");
+        map.put(5, "V");
+        map.put(10, "X");
+        map.put(50, "L");
+        map.put(100, "C");
+        map.put(500, "D");
+        map.put(1000, "M");
+        int[] items = {1000, 100, 10, 1};
+        StringBuilder builder = new StringBuilder();
+        
+        for (int item: items) {
+            int c = num / item;
+            int d = num % item;
+            if (c == 0)
+                continue;
+            else if (c <= 3) {
+                for (int j=1; j<=c; j++)
+                    builder.append(map.get(item));
+            } else if (c == 4) {
+                builder.append(map.get(item));
+                builder.append(map.get(item*5));
+            } else if (c == 5) {
+                builder.append(map.get(item*5));
+            } else if (c <= 8) {
+                builder.append(map.get(item*5));
+                for (int j=1; j<=c-5; j++)
+                    builder.append(map.get(item));
+            } else if (c == 9) {
+                builder.append(map.get(item));
+                builder.append(map.get(item*10));
+            }
+            num = d;
+        }
+        
+        return builder.toString();
+    }
+}
