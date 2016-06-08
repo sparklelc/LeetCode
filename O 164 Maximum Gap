@@ -14,6 +14,8 @@ You may assume all elements in the array are non-negative integers and fit in th
 4. 记录每个段的最大和最小元素
 5. 从左向右, 找左边段的最大值和右边段的最小值的最大间隔.
 
+附：基数排序Radix Sort
+
 
 //参照别人思路我的代码
 public class Solution {
@@ -54,4 +56,63 @@ public class Solution {
         }
         return result;
     }
+}
+
+
+
+**************************
+
+基数排序, 一定是稳定的, 因为如百位排序是在十位排序基础上.
+    见: http://www.acmerblog.com/radix-sorting-5601.html
+
+public class RadixSorting {
+	private static void radixSorting(int[] arr, int d) {      // d为数据长度，如[211, 333], d=3
+		for (int i = 0; i < d; i++) {
+			arr = countingSort(arr, i);                       // 依次对各位数字排序（直接用计数排序的变体）
+			print(arr, i + 1, d);
+		}
+	}
+
+	// 利用计数排序对元素的每一位进行排序
+	private static int[] countingSort(int[] arr, int expIndex) {
+		int k = 9;
+		int[] b = new int[arr.length];
+		int[] c = new int[k + 1];                             // 10进制
+
+		for (int i = 0; i < k; i++) {
+			c[i] = 0;
+		}
+		for (int i = 0; i < arr.length; i++) {
+			int d = getBitData(arr[i], expIndex);
+			c[d]++;
+		}
+		for (int i = 1; i <= k; i++) {
+			c[i] += c[i - 1];                                // 相加
+		}
+		for (int i = arr.length - 1; i >= 0; i--) {
+			int d = getBitData(arr[i], expIndex);
+			b[c[d] - 1] = arr[i];                            // C[d]-1 就代表小于等于元素d的元素个数，就是d在B的位置
+			c[d]--;
+		}
+		return b;
+	}
+
+	private static int getBitData(int data, int expIndex) {     // 获取data指定位的数
+		while (data != 0 && expIndex > 0) {
+			data /= 10;
+			expIndex--;
+		}
+		return data % 10;
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		int[] arr = new int[] { 326, 453, 608, 835, 751, 435, 704, 690, 88, 79, 79 };
+		System.out.println("基数排序前为：");
+		for (int t : arr) {
+			System.out.print(t + " ");
+		}
+		System.out.println();
+		radixSorting(arr, 4);
+	}
 }
