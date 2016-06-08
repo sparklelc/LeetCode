@@ -1,0 +1,101 @@
+Mid:
+Given two integers representing the numerator and denominator of a fraction, return the fraction in string format.
+If the fractional part is repeating, enclose the repeating part in parentheses.
+For example, 
+ •Given numerator = 1, denominator = 2, return "0.5".
+ •Given numerator = 2, denominator = 1, return "2".
+ •Given numerator = 2, denominator = 3, return "0.(6)".
+
+
+注意：
+Integer.MIN_VALUE乘以-1会溢出，要用long
+
+
+
+//别人代码，和我思路差不多，用hashmap来保存数字上次出现的位置。
+public class Solution {
+    public String fractionToDecimal(int numerator, int denominator) {
+        if (numerator == 0) {
+            return "0";
+        }
+        StringBuilder res = new StringBuilder();
+        res.append(((numerator > 0) ^ (denominator > 0)) ? "-" : "");      // "+" or "-"
+        long num = Math.abs((long)numerator);
+        long den = Math.abs((long)denominator);
+
+        // integral part
+        res.append(num / den);
+        num %= den;
+        if (num == 0) {
+            return res.toString();
+        }
+
+        // fractional part
+        res.append(".");
+        HashMap<Long, Integer> map = new HashMap<Long, Integer>();
+        map.put(num, res.length());
+        while (num != 0) {
+            num *= 10;
+            res.append(num / den);
+            num %= den;
+            if (map.containsKey(num)) {
+                int index = map.get(num);
+                res.insert(index, "(");
+                res.append(")");
+                break;
+            }
+            else {
+                map.put(num, res.length());
+            }
+        }
+        return res.toString();
+    }
+}
+
+
+
+
+
+//我的代码
+public class Solution {
+    public String fractionToDecimal(int numerator, int denominator) {
+        String left = new Long(((long) numerator) / denominator).toString();
+        long c = ((long) numerator) % denominator;
+        if (c < 0) {
+            c = 0L - c;
+        } else if (c == 0)
+            return left;
+        if (numerator*((long) denominator) < 0 && left.equals("0"))
+            left = "-0";
+        
+        long denomin = denominator < 0 ? 0L - denominator: denominator;
+        StringBuilder builder = new StringBuilder();
+        builder.append(left);
+        builder.append(".");
+        HashMap<Long, Integer> set = new HashMap();
+        StringBuilder dec = new StringBuilder();
+        boolean same = false;
+        int index = 0;
+        while (true) {
+            System.out.println((int)((c*10) / denomin));
+            dec.append(new Integer((int)((c*10) / denomin)).toString());
+            set.put(c, index++);
+            c = (c*10) % denomin;
+            if (set.containsKey(c))
+                break;
+            if (c == 0) {
+                same = true;
+                break;
+            }
+        }
+        if (!same) {
+            builder.append(dec.toString().substring(0, set.get(c)));
+            builder.append("(");
+            builder.append(dec.toString().substring(set.get(c)));
+            builder.append(")");
+        } else {
+            builder.append(dec.toString());
+        }
+        return builder.toString();
+    }
+}
