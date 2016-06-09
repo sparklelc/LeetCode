@@ -50,3 +50,32 @@ public class Solution {
         return builder.toString();
     }
 }
+
+************************************
+Easy:
+169 Majority Element
+Given an array of size n, find the majority element. The majority element is the element that appears more than ⌊ n/2 ⌋ times.
+You may assume that the array is non-empty and the majority element always exist in the array.
+最大元素出现次数 > n/2.
+
+
+每次去掉两个不同的数，但代码可以写的很简单。
+
+
+别人代码：
+public class Solution {
+    public int majorityElement(int[] num) {
+
+        int major=num[0], count = 1;
+        for(int i=1; i<num.length;i++){
+            if(count==0){                                                   
+                count++;
+                major=num[i];
+            }else if(major==num[i]){               // 相同则count+1
+                count++;
+            }else count--;                         // 不同则count-1
+
+        }
+        return major;
+    }
+}
