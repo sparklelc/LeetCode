@@ -21,7 +21,7 @@ public class Solution {
         StringBuilder result = new StringBuilder();
 
         while(n>0){
-            n--;
+            n--;                                              //关键
             result.insert(0, (char)('A' + n % 26));
             n /= 26;
         }
