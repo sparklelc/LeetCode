@@ -95,7 +95,7 @@ Note: Your solution should be in logarithmic time complexity.
 //我的代码：
 public class Solution {
     public int trailingZeroes(int n) {
-        int two = getNum(2, n);
+        int two = getNum(2, n);            //其实不用判断2，因为2的数目总是多于5的
         int five = getNum(5, n);
         return Math.min(two, five);
     }
