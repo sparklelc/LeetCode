@@ -14,6 +14,7 @@ public String[] split(String regex)    //参数是regex, 可以用String.split("
   
   
 //我的代码
+//对于不存在的情况,赋上一个默认值
 public class Solution {
     public int compareVersion(String version1, String version2) {
         String[] arr1 = version1.split("\\.");
@@ -21,7 +22,7 @@ public class Solution {
         for (int i=0; i<arr1.length || i<arr2.length; i++) {
             if ((i<arr1.length && arr1[i].equals(".")) || (i<arr2.length && arr2[i].equals(".")))
                 continue;
-            int num1 = 0;
+            int num1 = 0;                                              //赋一个默认值
             int num2 = 0;
             if (i<arr1.length)
                 num1 = Integer.valueOf(arr1[i]);
