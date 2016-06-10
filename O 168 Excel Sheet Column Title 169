@@ -79,3 +79,35 @@ public class Solution {
         return major;
     }
 }
+
+
+******************************************
+Easy
+172 Factorial Trailing Zeroes
+Given an integer n, return the number of trailing zeroes in n!.    返回n!结尾0的个数
+Note: Your solution should be in logarithmic time complexity.
+
+
+思路：
+如625，625/625=1， 625/25=25， 625/5=125  所以625有1+25+125个5相乘
+
+
+//我的代码：
+public class Solution {
+    public int trailingZeroes(int n) {
+        int two = getNum(2, n);
+        int five = getNum(5, n);
+        return Math.min(two, five);
+    }
+    
+    public int getNum(int n, int t) {
+        // n = 2,5 t= 25
+        int result = 0;
+        int time = (int) (Math.log(t)/Math.log(n));
+        while (time >= 1) {
+            result = result + (int) (t/Math.pow(n, time));
+            time --;
+        }
+        return result;
+    }
+}
