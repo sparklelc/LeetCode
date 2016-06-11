@@ -1,0 +1,38 @@
+Hard:
+二维矩阵，从最左上走到最右下的格子，每次只能向右边或者向下边走，每个格子有个数字，到这个格子加上这个值得到新的余额。
+一开始有个初始值(余额)，求最小的初始值使得在每个格子上余额>=1，并且走出迷宫。
+
+
+思路：
+正向动归是不行的，因为要存余额和当前的最小值两个值。
+反向动归只需要存当前最小值。
+
+说白了就是曲线上下移动的问题，我们只需要保证最后一个点的y>=0，所以反向推导可以固定最后一个点
+但是如果正向推导，要同时存余额和当前最小值。
+
+
+
+//参照别人思路我的代码：
+public class Solution {
+    public int bestResult = 1;
+    public int calculateMinimumHP(int[][] dungeon) {
+        if (dungeon == null || dungeon.length == 0)
+            return 0;
+        
+        int[][] health = new int[dungeon.length+1][dungeon[0].length+1];
+        for (int i=dungeon.length-1; i>=0; i--) {
+            for (int j=dungeon[0].length-1; j>=0; j--) {
+                if (i == dungeon.length-1 && j == dungeon[0].length-1) {
+                    health[i][j] = Math.max(0, -dungeon[i][j]);
+                } else if (i == dungeon.length-1) {
+                    health[i][j] = Math.max(0, health[i][j+1]-dungeon[i][j]);
+                } else if (j == dungeon[0].length-1) {
+                    health[i][j] = Math.max(0, health[i+1][j]-dungeon[i][j]);
+                } else {
+                    health[i][j] = Math.max(0, Math.min(health[i+1][j], health[i][j+1])-dungeon[i][j]);
+                }
+            }
+        }
+        return health[0][0] + 1;                                              //保证每格上余额大于等于1
+    }
+}
