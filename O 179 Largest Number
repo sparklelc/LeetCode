@@ -1,0 +1,86 @@
+Mid:
+Given a list of non negative integers, arrange them such that they form the largest number.
+For example, given [3, 30, 34, 5, 9], the largest formed number is 9534330.
+Note: The result may be very large, so you need to return a string instead of an integer.
+
+
+思路：
+用priorityqueue做，比比两两元素的大小，关键是怎么比较
+特殊的比较要考虑如121和12，合并后就两种情况，要么121+12，要么12+121
+比较12112和12121大小，所以12比121要大
+
+
+//别人代码
+public  String largestNumber(int[] num) {
+    if(num==null || num.length==0)
+        return "";
+    String[] Snum = new String[num.length];
+    for(int i=0;i<num.length;i++)
+        Snum[i] = num[i]+"";
+
+    Comparator<String> comp = new Comparator<String>(){
+        @Override
+        public int compare(String str1, String str2){
+            String s1 = str1+str2;
+            String s2 = str2+str1;
+            return s1.compareTo(s2);                      //比较两两元素
+        }
+    };
+
+    Arrays.sort(Snum, comp);                              //Arrays.sort可以传Comparator进去。
+    
+    if(Snum[Snum.length-1].charAt(0)=='0')
+        return "0";
+    StringBuilder sb = new StringBuilder();
+    for(String s: Snum)
+        sb.insert(0, s);
+    return sb.toString();
+}
+
+
+//我的代码：
+public class Solution {
+    public String largestNumber(int[] nums) {
+        String[] arr = new String[nums.length];
+        boolean isAllZero = true;
+        for (int i=0; i<nums.length; i++) {
+            arr[i] = Integer.toString(nums[i]);
+            if (nums[i] != 0)
+                isAllZero = false;
+        }
+        if (isAllZero)
+            return "0";
+            
+        PriorityQueue<String> queue = new PriorityQueue<String>(new Comparator<String>(){
+            public int compare(String s1, String s2) {
+                int len1 = s1.length();
+                int len2 = s2.length();
+                int i1, i2;
+                i1 = i2 = 0;
+                for (int i=0; i<len1+len2; i++, i1++, i2++) {
+                    if (i1 == len1)
+                        i1 = 0;
+                    if (i2 == len2)
+                        i2 = 0;
+                    char c1 = s1.charAt(i1);
+                    char c2 = s2.charAt(i2);
+                    if (c1 > c2)
+                        return -1;
+                    else if (c1 < c2)
+                        return 1;
+                }
+                return 0;
+            }
+        });
+        
+        for(String str: arr)
+            queue.add(str);
+        StringBuilder result = new StringBuilder();
+        String item = queue.poll();
+        while (item != null) {
+            result.append(item);
+            item = queue.poll();
+        }
+        return result.toString();
+    }
+}
