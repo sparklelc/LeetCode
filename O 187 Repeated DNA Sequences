@@ -1,0 +1,69 @@
+Mid:
+All DNA is composed of a series of nucleotides abbreviated as A, C, G, and T, for example: "ACGAATTCCG". 
+When studying DNA, it is sometimes useful to identify repeated sequences within the DNA.
+Write a function to find all the 10-letter-long sequences (substrings) that occur more than once in a DNA molecule.
+
+For example,
+Given s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT", Return:["AAAAACCCCC", "CCCCCAAAAA"].
+For   s = "AAAAAAAAAAA",                      Return["AAAAAAAAAA"].
+
+
+
+思路：
+1. 一开始想用动归，复杂度O(n^2), 超时
+2. 发现字符串固定是10字符，用hashset做，复杂度O(10*n)
+
+
+
+//我的代码：
+public class Solution {
+    public List<String> findRepeatedDnaSequences(String s) {
+        ArrayList<String> result = new ArrayList<String>();
+        if (s == null || s.length() < 11)
+            return result;
+            
+        HashSet<String> set = new HashSet<String>();
+        HashSet<String> resultSet = new HashSet<String>();
+        for (int i=0; i<=s.length()-10; i++) {
+            String str = s.substring(i, i+10);
+            //System.out.println(str);
+            if (set.contains(str))
+                resultSet.add(str);
+            else
+                set.add(str);
+        }
+        for (String str: resultSet)
+            result.add(str);
+        return result;
+    }
+}
+
+
+
+//别人代码，本质上是优化hashcode的计算，因为每次移位实际上只修改了第一位和最后一位的字符
+public class Solution {
+    public List<String> findRepeatedDnaSequences(String DNA) {
+        ArrayList<String> res = new ArrayList<String>();
+        if(DNA.length()<10)    return res;
+        HashSet<Integer> once = new HashSet<Integer>();                 //用Integer直接存自定义的hashcode
+        HashSet<Integer> twice = new HashSet<Integer>();
+        int[] map = new int[26];
+        map['A'-'A'] = 0;
+        map['C'-'A'] = 1;
+        map['G'-'A'] = 2;
+        map['T'-'A'] = 3;
+        int enc = 0;
+        for(int i=0; i<9; ++i){
+            enc <<=2;
+            enc |= map[DNA.charAt(i)-'A'];
+        }
+        for(int j=9; j<DNA.length(); ++j){
+            enc <<=2;
+            enc &= 0xfffff;
+            enc |= map[DNA.charAt(j)-'A'];
+            if(!once.add(enc) && twice.add(enc))
+                res.add(DNA.substring(j-9,j+1));
+        }
+        return res;
+    }
+}
