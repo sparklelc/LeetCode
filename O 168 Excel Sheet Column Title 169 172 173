@@ -124,3 +124,63 @@ public class Solution {
         return r;
     }
 }
+
+
+******************************************
+Mid
+173 Factorial Trailing Zeroes
+    实现BST的next()和hasNext()函数，要求时间复杂度为O(1)，空间复杂度为O(h)
+Implement an iterator over a binary search tree (BST). Your iterator will be initialized with the root node of a BST.
+Calling next() will return the next smallest number in the BST.
+Note: next() and hasNext() should run in average O(1) time and uses O(h) memory, where h is the height of the tree.
+
+思路:
+用stack记录next()位置的结点以及其所有父结点
+
+
+//我的代码：
+public class BSTIterator {
+    TreeNode root = null;
+    LinkedList<TreeNode> stack = new LinkedList<TreeNode>();
+    
+    public BSTIterator(TreeNode root) {
+        this.root = root;
+        while (root != null) {
+            stack.addFirst(root);
+            root = root.left;
+        }
+    }
+
+    public boolean hasNext() {
+        if (stack.size() == 0)
+            return false;
+        else
+            return true;
+    }
+
+    public int next() {
+        TreeNode result = stack.pollFirst();
+        if (result.right != null) {
+            TreeNode tem = result;
+            stack.addFirst(tem);
+            stack.addFirst(tem.right);
+            tem = tem.right.left;
+            while (tem != null) {
+                stack.addFirst(tem);
+                tem = tem.left;
+            }
+        } else {
+            TreeNode temRoot = stack.pollFirst();
+            TreeNode tem = result;
+            while (temRoot != null && tem != temRoot.left) {
+                tem = temRoot;
+                temRoot = stack.pollFirst();
+            }
+            if (temRoot != null) {
+                stack.addFirst(temRoot);
+            }
+            
+        }
+        return result == null? -1: result.val;
+    }
+}
