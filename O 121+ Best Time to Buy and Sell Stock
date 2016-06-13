@@ -62,7 +62,7 @@ Say you have an array for which the ith element is the price of a given stock on
 Design an algorithm to find the maximum profit. You may complete at most two transactions. 最多做两次交易
 
 
-直接用指针遍历一次应该是做不了的，应该要用动态规划
+直接用指针遍历一次应该是做不了的，应该要用动态规划O(n)
 用动态规划做，关键在于只需要求出时间段（0，j）和(j, length-1)中的最高收益, 而我之前把所有(i,j,k)的都求出来了，所以超时.
 其实不需要考虑起点和终点，考虑中间结点已经够了。
 
