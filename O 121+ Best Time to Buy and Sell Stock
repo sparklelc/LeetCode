@@ -28,7 +28,7 @@ public class Solution {
 }
 
 
-##########
+#######################################################
 题目122 Mid:
 Say you have an array for which the ith element is the price of a given stock on day i.
 
@@ -56,7 +56,7 @@ public class Solution {
 
 
 
-##########
+##################################################
 题目123 Hard:
 Say you have an array for which the ith element is the price of a given stock on day i.
 Design an algorithm to find the maximum profit. You may complete at most two transactions. 最多做两次交易
@@ -95,5 +95,55 @@ public class Solution {
             best = Math.max(pre[i] + back[i], best);
         }
         return best;
+    }
+}
+
+
+
+#########################################################
+题目188 Hard:
+188 Best Time to Buy and Sell Stock IV:
+Say you have an array for which the ith element is the price of a given stock on day i.
+Design an algorithm to find the maximum profit. You may complete at most k transactions.
+和上题不同的是,上面可以做两次交易,而这里可以做K次交易.
+
+
+
+思路：
+动归，时间复杂度O(k*n)
+  local[t][i]  表示i天，刚好第i天完成第t次交易的卖出，这种情况下的最大收益。
+  glocal[t][i] 表示i天，完成t次交易                   这种情况下的最大收益。
+有：
+  local[t][i] = Math.max(local[t][i-1]+benefit, global[t-1][i-1]+Math.max(0, benefit))
+  global[t][i] = Math.max(local[t][i], global[t][i-1])
+其中benefit = prices[i] - prices[i-1]。表示昨天买入，今天卖出的收益。
+
+
+
+
+参照：
+http://blog.csdn.net/feliciafay/article/details/45128771
+// 参照别人我的代码：
+public class Solution {
+    public int maxProfit(int k, int[] prices) {
+        int result = 0;
+        if (2 * k > prices.length) {                        //需要对特殊情况做优化处理，不然会超时或超过Memory限制
+            for (int i=1; i<prices.length; i++) {
+                int tem = prices[i] - prices[i-1];
+                result += tem < 0? 0: tem; 
+            }
+            return result;
+        }
+        
+        int[][] local = new int[k+1][prices.length+1];
+        int[][] global = new int[k+1][prices.length+1];
+        for (int t=1; t<=k; t++) {                                      // t -> transaction
+            for (int i=1; i<=prices.length; i++) {                      // i -> date
+                int benefit = i==1? 0: prices[i-1]-prices[i-2];
+                local[t][i] = Math.max(local[t][i-1]+benefit, global[t-1][i-1]+Math.max(0, benefit));
+                global[t][i] = Math.max(local[t][i], global[t][i-1]);
+            }
+        }
+        return global[k][prices.length];
     }
 }
