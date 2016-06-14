@@ -67,3 +67,30 @@ public class Solution {
         return res;
     }
 }
+
+
+*********************************************************
+190 Easy: Reverse Bits
+Reverse bits of a given 32 bits unsigned integer.
+For example, given input 43261596 (represented in binary as 00000010 10010100 00011110 10011100), 
+                 return 964176192 (represented in binary as 00111001 01111000 00101001 01000000).
+                 
+思路：
+除以2求模来判断每一位是1还是0，注意这里是unsigner integer，范围是四十多亿，所以不能直接用除法和求模，要用位操作。
+
+
+//我的代码：
+public class Solution {
+    // you need treat n as an unsigned value
+    public int reverseBits(int n) {
+        int result = 0;
+        for (int index = 31; index>=0; index--) {
+            int c = n & 1;
+            if (c == 1) {
+                result |= 1<<index;
+            }
+            n = n >>> 1;
+        }
+        return result;
+    }
+}
