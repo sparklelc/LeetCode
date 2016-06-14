@@ -140,7 +140,7 @@ public class Solution {
         for (int t=1; t<=k; t++) {                                      // t -> transaction
             for (int i=1; i<=prices.length; i++) {                      // i -> date
                 int benefit = i==1? 0: prices[i-1]-prices[i-2];
-                local[t][i] = Math.max(local[t][i-1]+benefit, global[t-1][i-1]+Math.max(0, benefit));
+                local[t][i] = Math.max(local[t][i-1]+benefit, global[t-1][i-1]+Math.max(0, benefit)); //两种情况，第t次交易已经做了或者没做
                 global[t][i] = Math.max(local[t][i], global[t][i-1]);
             }
         }
