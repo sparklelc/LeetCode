@@ -94,3 +94,28 @@ public class Solution {
         return result;
     }
 }
+
+*********************************************************
+198	House Robber: Easy
+You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, 
+the only constraint stopping you from robbing each of them is that adjacent houses have security system connected and 
+it will automatically contact the police if two adjacent houses were broken into on the same night.
+不允许偷相邻的两家人。
+
+
+思路:
+动归, 但空间上可以优化到O(1), 不需要用数组
+
+
+//我的代码
+public class Solution {
+    public int rob(int[] nums) {
+        int[] robbed = new int[nums.length+1];
+        int[] norobbed = new int[nums.length+1];                //其实不需要用数组,直接保存上一个值就可以了,int prevNorobbed
+        for (int i=1; i<=nums.length; i++) {
+            robbed[i] = norobbed[i-1] + nums[i-1];
+            norobbed[i] = Math.max(robbed[i-1], norobbed[i-1]);
+        }
+        return Math.max(robbed[nums.length], norobbed[nums.length]);
+    }
+}
