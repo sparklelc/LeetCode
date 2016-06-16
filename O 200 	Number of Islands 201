@@ -50,3 +50,44 @@ public int numIslands(char[][] grid) {
       DFSMarking(grid, i, j - 1);
   }
 }
+
+
+*******************************************************************
+Mid: 
+201 Bitwise AND of Numbers Range
+Given a range [m, n] where 0 <= m <= n <= 2147483647, return the bitwise AND of all numbers in this range, inclusive.
+For example, given the range [5, 7], you should return 4.
+because: 101 & 110 & 111 = 100
+
+我的思路:
+1. 算n-m的差值，如果差值大于1，那么最后一位肯定为0，如果差值大于2，倒数第二位肯定为0...
+2. 只算差值还不够，比如[3，4]返回0， 因为011 & 100 = 000。所以先要m&n一下。
+相当于m&(m+1)&(m+2)&...&n = (m&n)&(m+1)&(m+2)...
+
+//我的代码：
+public class Solution {
+    public int rangeBitwiseAnd(int m, int n) {
+        int diff = n - m;
+        int index = 0xfffffffe;
+        m &= n;
+        while (diff != 0) {
+            m &= index;
+            index = (index << 1) | 1;
+            diff >>>= 1;
+        }
+        return m;
+    }
+}
+
+//别人代码：
+public class Solution {
+    public int rangeBitwiseAnd(int m, int n) {
+        int diffBits = 0;
+        while (m != n) {
+            m >>= 1;
+            n >>= 1;
+            diffBits++;
+        }
+        return n<<diffBits;
+    }
+}
