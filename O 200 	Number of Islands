@@ -1,0 +1,52 @@
+Mid:
+200	Number of Islands
+Given a 2d grid map of '1's (land) and '0's (water), count the number of islands. 
+An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. 
+You may assume all four edges of the grid are all surrounded by water.
+   找有多少个岛，1表示陆地，0表示海洋。
+
+Example 1:
+    11110
+    11010
+    11000
+    00000
+Answer: 1
+
+我的思路:
+1. 用stack来避免栈溢出（其实不用也可以）
+2. 用boolean[][] 来记录是否查找过（别人直接修改原数组，将found过的直接修改成‘0’，好处在于节约空间）
+3. 我之前以为只需找某个结点的下边和右边的结点，其实是错误的
+   比如 1 0 1
+        1 1 1
+        0 0 0  需要向上找，所以其实四个方向都需要找。
+
+
+//别人代码
+public class Solution {
+  private int n;
+  private int m;
+
+public int numIslands(char[][] grid) {
+    int count = 0;
+    n = grid.length;
+    if (n == 0) return 0;
+    m = grid[0].length;
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < m; j++)
+            if (grid[i][j] == '1') {
+                DFSMarking(grid, i, j);
+                ++count;
+            }
+    }    
+    return count;
+  }
+
+  private void DFSMarking(char[][] grid, int i, int j) {
+      if (i < 0 || j < 0 || i >= n || j >= m || grid[i][j] != '1') return;
+      grid[i][j] = '0';
+      DFSMarking(grid, i + 1, j);
+      DFSMarking(grid, i - 1, j);
+      DFSMarking(grid, i, j + 1);
+      DFSMarking(grid, i, j - 1);
+  }
+}
