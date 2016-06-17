@@ -77,7 +77,7 @@ For example, given input 43261596 (represented in binary as 00000010 10010100 00
                  
 思路：
 除以2求模来判断每一位是1还是0，注意这里是unsigner integer，范围是四十多亿，所以不能直接用除法和求模，要用位操作。
-
+注意：^是异或符号，不是求指数
 
 //我的代码：
 public class Solution {
