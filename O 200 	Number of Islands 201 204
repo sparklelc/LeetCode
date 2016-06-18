@@ -102,6 +102,7 @@ Easy:
 思路：
 1. 用ArrayList<Integer>保存所有是素数的数，每次判断一个数能否整除某个素数，但速度很慢，只beat 2%
 2. 参照别人思路，每次找到一个素数，把他所有整数倍的数字设成非素数。
+3. 更加优化，只考虑奇数，因为偶数总可以被2整除。
 
 
 //参照别人我的代码：
@@ -112,7 +113,7 @@ public class Solution {
         
         int result = n - 2;                          //记录有多少个素数
         boolean[] isNonPrime = new boolean[n];
-        for (int i=2; i<n; i++) {
+        for (int i=2; i<n; i++) {                    //可以优化成只考虑基数
             if (!isNonPrime[i]) {
                 for (int j=2; i*j < n; j++) {        //把素数i的所有整数倍的数字i*j设置成非素数
                     if (!isNonPrime[i*j]) {
