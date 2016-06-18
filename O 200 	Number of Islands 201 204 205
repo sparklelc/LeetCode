@@ -126,3 +126,38 @@ public class Solution {
         return result;
     }
 }
+
+*******************************************************************
+Easy: 
+205	Isomorphic Strings
+判断两个字符串模式是否相同
+比如“aab”和“ccd”是相同的，"abc"和“dee”不是相同的
+
+思路：
+1. 我用hashmap保存字符的对应关系
+2. 其实没必要用hashmap，因为字母范围就'a'到'z'，直接用数组存
+
+
+//我的代码
+public class Solution {
+    public boolean isIsomorphic(String s, String t) {
+        if (s == null || t == null || s.length() == 0)
+            return true;
+            
+        HashSet<Character> set = new HashSet<Character>();    
+        HashMap<Character, Character> map = new HashMap<Character, Character>();
+        char[] com = new char[s.length()];
+        for (int i=0; i<s.length(); i++) {
+            if (map.containsKey(s.charAt(i)))
+                com[i] = map.get(s.charAt(i));
+            else if (!set.contains(t.charAt(i))){
+                com[i] = t.charAt(i);
+                map.put(s.charAt(i), com[i]);
+                set.add(com[i]);
+            } else {
+                return false;
+            }
+        }
+        return t.equals(new String(com));
+    }
+}
