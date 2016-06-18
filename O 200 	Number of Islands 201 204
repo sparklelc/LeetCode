@@ -113,7 +113,7 @@ public class Solution {
         
         int result = n - 2;                          //记录有多少个素数
         boolean[] isNonPrime = new boolean[n];
-        for (int i=2; i<n; i++) {                    //可以优化成只考虑基数
+        for (int i=2; i<n; i++) {                    //可以优化成只考虑基数,但result计算要改
             if (!isNonPrime[i]) {
                 for (int j=2; i*j < n; j++) {        //把素数i的所有整数倍的数字i*j设置成非素数
                     if (!isNonPrime[i*j]) {
