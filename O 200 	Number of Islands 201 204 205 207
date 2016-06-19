@@ -226,7 +226,7 @@ public static boolean canFinish(int numCourses, int[][] prerequisites) {
 private static boolean DFSVisit(int n, ArrayList<Integer>[] map, int[] visitState) {
     if (visitState[n] == 2)
         return true;
-    if (visitState[n] == 1)
+    if (visitState[n] == 1)                                       //再次访问正在visiting的结点，说明有死循环，所以return false
         return false;
 
     visitState[n] = 1;
