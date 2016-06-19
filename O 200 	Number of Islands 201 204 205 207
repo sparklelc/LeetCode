@@ -161,3 +161,79 @@ public class Solution {
         return t.equals(new String(com));
     }
 }
+
+*******************************************************************
+Mid: 
+207 Course Schedule
+课程选修,修某些课程之前需要修另外一些课,问能不能修完所有课程
+
+
+我的思路:
+    拓扑排序,记录结点入度,入度为0的表示可以选修,10ms beat 78%
+别人思路：
+    DFS和递归, 5ms
+
+//我的代码：
+public class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> inNeed = new ArrayList<ArrayList<Integer>>();
+        int[] needNum = new int[numCourses];
+        LinkedList<Integer> canLearn = new LinkedList<Integer>();
+        for (int i=0; i<numCourses; i++)
+            inNeed.add(new ArrayList<Integer>());
+        
+        for (int[] pair: prerequisites) {
+            inNeed.get(pair[1]).add(pair[0]);
+            needNum[pair[0]]++;
+        }
+        
+        for (int i=0; i<numCourses; i++)
+            if (needNum[i] == 0)
+                canLearn.add(i);
+        
+        int learn = 0;
+        while (canLearn.size() != 0) {
+            int index = canLearn.pollFirst();
+            for (int j: inNeed.get(index)) {
+                needNum[j] --;
+                if (needNum[j] == 0)
+                    canLearn.add(j);
+            }
+            learn++;
+        }
+        return learn == numCourses;
+    }
+}
+
+//别人代码：
+public static boolean canFinish(int numCourses, int[][] prerequisites) {
+    ArrayList<Integer>[] map = new ArrayList[numCourses];
+    for (int i = 0; i < numCourses; i++) {
+        map[i] = new ArrayList<Integer>();
+    }
+    for (int i = 0; i < prerequisites.length; i++) {                   // pre -> vertex
+        map[prerequisites[i][1]].add(prerequisites[i][0]);
+    }
+    int[] visitState = new int[numCourses];                            // 0: unvisited, 1: visiting, 2:visited
+
+    for (int i = 0; i < numCourses; i++) {
+        if (!DFSVisit(i, map, visitState))
+            return false;
+    }
+    return true;
+}
+
+private static boolean DFSVisit(int n, ArrayList<Integer>[] map, int[] visitState) {
+    if (visitState[n] == 2)
+        return true;
+    if (visitState[n] == 1)
+        return false;
+
+    visitState[n] = 1;
+    for (int j = 0; j < map[n].size(); j++) {
+        if (!DFSVisit(map[n].get(j), map, visitState))
+            return false;
+    }
+    visitState[n] = 2;
+    return true;
+}
