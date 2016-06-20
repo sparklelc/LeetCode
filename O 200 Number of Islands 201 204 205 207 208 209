@@ -246,3 +246,33 @@ Mid:
 
 注意: 每个节点要用一个boolean来表示当前的单词是否属于输入单词, 另外TrieNode[26]存放下面的节点
 代码没什么好说的
+
+*******************************************************************
+Easy: 
+209	Minimum Size Subarray Sum
+Given an array of n positive integers and a positive integer s, find the minimal length of a subarray of which the sum ≥ s. 
+If there isn't one, return 0 instead.
+For example, given the array [2,3,1,2,4,3] and s = 7,
+the subarray [4,3] has the minimal length under the problem constraint.
+找最短连续段使得段总和超过s
+
+思路：
+两个指针
+注意：一开始的结果应该设置成MAX_VALUE而不是0
+
+//我的代码
+public class Solution {
+    public int minSubArrayLen(int s, int[] nums) {
+        int sum = 0;
+        int result = 0;                                                         //应该设置成MAX_VALUE，而不是0
+        int first = 0;
+        for (int i=0; i<nums.length; i++) {
+            sum += nums[i];
+            while (sum >= s && first <= i) {
+                result = result == 0? i+1-first: Math.min(result, i+1-first);   //设置成MAX_VALUE后就无需判断result==0
+                sum -= nums[first++];
+            }
+        }
+        return result;
+     }
+}
