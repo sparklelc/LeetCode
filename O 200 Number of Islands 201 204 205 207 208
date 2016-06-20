@@ -237,3 +237,11 @@ private static boolean DFSVisit(int n, ArrayList<Integer>[] map, int[] visitStat
     visitState[n] = 2;
     return true;
 }
+
+
+*******************************************************************
+Mid: 
+208 Implement Trie (Prefix Tree)
+实现简单前缀树, 范围'a'-'z'
+
+注意: 每个节点要用一个boolean来表示当前的单词是否属于输入单词, 另外TrieNode[26]存放下面的节点
