@@ -1,2 +1,6 @@
 1. 有时候多加一个if判断都会产生TLE，比如题目147
 2. 若无需设置成“类成员变量”的变量可以直接设置成函数局部变量
+
+
+List<String>[] ls = new ArrayList<String>[10];  错
+List<String>[] ls = new ArrayList[10]           对，java不支持泛型数组
