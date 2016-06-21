@@ -247,6 +247,11 @@ Mid:
 注意: 每个节点要用一个boolean来表示当前的单词是否属于输入单词, 另外TrieNode[26]存放下面的节点
 代码没什么好说的
 
+题目 211： Add and Search Word - Data structure design
+是前缀树应用的一个例子
+
+
+
 *******************************************************************
 Easy: 
 209	Minimum Size Subarray Sum
