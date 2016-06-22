@@ -1,0 +1,39 @@
+Mid:
+213	House Robber II
+环形,不能偷连续的两间房子
+
+
+我的思路:
+  nosteal[1][i]表示偷第一间房子情况下，不偷第i间房子
+  steal[0][i]  表示不偷第一间房子情况下，偷第i间房子
+别人思路：
+  按House-Robber-I的解法来做，简化成[0, n-1], [1,n]中取最大值
+
+  
+//我的代码：
+public class Solution {
+    public int rob(int[] nums) {
+        if (nums.length == 0)
+            return 0;
+        if (nums.length == 1)
+            return nums[0];
+            
+        int[] steal = new int[2];
+        int[] nosteal = new int[2];
+        steal[1] = Integer.MIN_VALUE;                    //表示惩罚
+        nosteal[1] = nums[0];
+        steal[0] = nums[1];
+        nosteal[0] = 0;
+        for (int i=2; i<nums.length; i++) {
+            int tem0 = steal[0];
+            int tem1 = steal[1];
+            
+            steal[0] = nosteal[0] + nums[i];                        //这里debug了较久，注意steal[0]只和[0]有关，和[1]无关
+            steal[1] = i==nums.length-1? Integer.MIN_VALUE: nosteal[1] + nums[i];
+            nosteal[0] = Math.max(tem0, nosteal[0]);
+            nosteal[1] = Math.max(tem1, nosteal[1]);
+        }
+        
+        return Math.max(Math.max(Math.max(steal[0], steal[1]), nosteal[0]), nosteal[1]);
+    }
+}
