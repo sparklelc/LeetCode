@@ -37,3 +37,51 @@ public class Solution {
         return Math.max(Math.max(Math.max(steal[0], steal[1]), nosteal[0]), nosteal[1]);
     }
 }
+
+*****************************************************************
+Mid
+215 Kth Largest Element in an Array
+找第k大的数
+
+
+思路：
+QuickSelect算法 O(n)
+也可以用max-heap平均复杂度是O(n*lgk)，也可以QuickSort复杂度O(n*lgn)
+
+
+//我的代码：
+public class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        return findK(nums, k, 0, nums.length);
+    }
+    
+    public int findK(int[] nums, int k, int start, int end) {
+        if (end - start == 1)
+            return nums[start];
+        int index = start;
+        int lastIndex = end-1;
+        for (; index<lastIndex;) {
+            while (index < lastIndex && nums[index+1] <= nums[index]) { //不要这样写quickSort，很慢，不要每次交换index中间值位置
+                swap(nums, index+1, lastIndex);                         //固定index为0或者end-1
+                lastIndex--;
+            }
+            
+            if (index < lastIndex && nums[index+1] > nums[index]) {
+                swap(nums, index, index+1);
+                index++;
+            }
+        }
+        if (index+1-start == k)                                        //这里debug了较久，记得要减start
+            return nums[index];
+        else if (index+1-start > k)
+            return findK(nums, k, start, index);
+        else
+            return findK(nums, k-index-1+start, index+1, end);
+    }
+    
+    public void swap(int[] nums, int i, int j) {
+        int tem = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tem;
+    }
+}
