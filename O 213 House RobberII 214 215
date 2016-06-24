@@ -39,6 +39,64 @@ public class Solution {
 }
 
 *****************************************************************
+Hard：
+214 Shortest Palindrome
+  Given a string S, you are allowed to convert it to a palindrome by adding characters in front of it. 
+  Find and return the shortest palindrome you can find by performing this transformation.
+For example:
+  Given "aacecaaa", return "aaacecaaa".
+  Given "abcd", return "dcbabcd".
+在字符串s前面加最少的字符串,使其成为回文
+
+
+
+我的思路
+ 实际上转化成找从第0位开始的最长回文
+1. 用动归做，复杂度是O(n^2)，最差，性能直接比较找回文还差
+2. 用前缀树做，完全没有必要，因为词典里只有一个word，完全发挥不了前缀树的作用(前缀树适合词典里面有多个word的情况)，还不如直接比较
+3. 参照别人思路，用KMP来做O(n)  （s作为pattern，s.reverse()作为长文）
+
+构造pattern:
+int[] index    0    1    2    3    4    5
+string              a    a    a    b    a    
+int[]         -1    0    1    2    0    1    
+                    |    |
+                  index  i                （见下面子函数findPattern）       
+    
+    
+                  
+//我的代码：
+public class Solution {
+    public String shortestPalindrome(String s) {
+        if (s == null || s.length() == 0)
+            return s;
+        int[] sIndex = new int[s.length()+1];
+        findPattern(s, sIndex);
+        String t = new StringBuilder(s).reverse().toString();          //string没有reverse()方法，要用StringBuilder
+        
+        int index = 1;
+        int result = 1;
+        for (int i=0; i<t.length(); i++, index++) {
+            while (index != 0 && t.charAt(i) != s.charAt(index-1))
+                index = sIndex[index-1]+1;
+            result = index;                      //找出最后一位之前的相同长度
+        }
+        return t.substring(0, t.length()-result)+s;
+    }
+    
+    public void findPattern(String s, int[] sIndex) {       //这里debug了很久
+        sIndex[0] = -1;
+        int index = 1;
+        for (int i=2; i<=s.length(); i++, index++) {
+            while (index != 0 && s.charAt(index-1) != s.charAt(i-1))
+                index = sIndex[index-1]+1;                  //回去找前一位
+            sIndex[i] = index;                              //用index赋值
+        }
+    }
+}
+
+
+*****************************************************************
 Mid
 215 Kth Largest Element in an Array
 找第k大的数
