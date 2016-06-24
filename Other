@@ -24,5 +24,42 @@ public class Solution {
 		arr[index1] = arr[index2];
 		arr[index2] = temp;
 	}
+}
 
+
+
+
+// 01背包问题-poj3624
+import java.util.*;
+public class Main {
+    static int[] lastRecord;                                    //用来代替二维数组，提高空间复杂度
+    static int[] record;
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt(); // num
+        int m = sc.nextInt(); // max sum
+        int[] cost = new int[n];
+        int[] benefit = new int[n];
+        lastRecord = new int[m+1];
+        record = new int[m+1];
+        for (int i=0; i<n; i++) {
+            cost[i] = sc.nextInt();
+            benefit[i] = sc.nextInt();
+        }
+        sc.close();
+        System.out.println(findMax(cost, benefit, m));
+    }
+
+    public static int findMax(int[] cost, int[] benefit, int sum) {
+        for (int i=1; i<=cost.length; i++) {
+            for (int j=1; j<=sum; j++) {                        //顺序动归
+                int tem = j-cost[i-1]>=0? lastRecord[j-cost[i-1]]+benefit[i-1]: Integer.MIN_VALUE;
+                record[j] = Math.max(lastRecord[j], tem);       //逆序动归可能时间复杂度会好点，但必须要用二维数组，空间复杂度高
+            }
+            int[] tem = lastRecord;
+            lastRecord = record;
+            record = tem;
+        }
+        return lastRecord[sum];
+    }
 }
