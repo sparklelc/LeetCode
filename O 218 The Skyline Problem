@@ -1,0 +1,89 @@
+Hard:
+218 The Skyline Problem
+https://leetcode.com/problems/the-skyline-problem/
+在二维坐标上做多个长方形,找出转折点的坐标
+
+
+我的思路:
+一开始想到线段树，但不熟悉线段树的分裂条件，所以用linked-node代替线段树。
+由于题目说了输入顺序是按照x的坐标递增的。
+
+
+//我的代码,beat 100%
+public class Solution {
+    public List<int[]> getSkyline(int[][] buildings) {
+        Segment seg = new Segment();
+        for (int[] input: buildings)
+            seg.add(input[0], input[1], input[2]);
+            
+        ArrayList<int[]> list = new ArrayList<int[]>();
+        Node node = seg.root;
+        int lastHeight = -1;
+        while (node != null) {
+            int[] arr = new int[2];
+            arr[0] = node.start;
+            arr[1] = node.height;
+            if ((arr[0] != 0 || arr[1] != 0) && arr[1]!=lastHeight)         //去掉重复高度的段
+                list.add(arr);
+            lastHeight = arr[1];
+            node = node.next;
+        }
+        return list;
+    }
+}
+
+class Node {                                        //Node记录每个段的起点以及高度
+    int start;
+    int height;
+    Node next;
+    public Node(int s, int h) {
+        this.start = s;
+        this.height = h;
+    }
+}
+
+class Segment {                                     //段集合
+    public Node root = null;
+    Node last = null;                               //记录上次的段，因为输入是按照x递增的，所以直接从上次段开始向后找
+    public Segment() {
+        root = new Node(0, 0);
+        last = root;
+    }
+    
+    public void add(int begin, int end, int h) {
+        Node node = last;
+        while (node.start < begin && node.next != null && node.next.start <= begin) {
+            node = node.next;
+        }
+        
+        last = node;
+        int lastHeight = node.height;
+        if (node.start == begin) {
+            node.height = Math.max(node.height, h);
+        } else {
+            if (node.height < h) {
+                Node tem = node.next;
+                node.next = new Node(begin, h);
+                node.next.next = tem;
+                last = node.next;
+            }
+        }
+        
+        node = last;
+        while (node.next != null && node.next.start < end) {
+            lastHeight = node.next.height;
+            if (node.height == node.next.height) {                       //合并同样高度的段
+                node.next = node.next.next;
+            } else {
+                if (node.next.height < h)
+                    node.next.height = h;
+                node = node.next;
+            }
+        }
+        if ((node.next == null || node.next.start > end) && lastHeight < h) {
+            Node tem = node.next;
+            node.next = new Node(end, lastHeight);
+            node.next.next = tem;
+        }
+    }
+}
