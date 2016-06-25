@@ -8,6 +8,10 @@ https://leetcode.com/problems/the-skyline-problem/
 一开始想到线段树，但不熟悉线段树的分裂条件，所以用linked-node代替线段树。
 由于题目说了输入顺序是按照x的坐标递增的。
 
+别人思路：
+用堆max-heap，把起点和终点（进行封装后,通过type区分起点终点）一起按位置进行排序，对起点用push操作把其高度压到heap里面，
+对终点用pop操作。大致好像是这样，具体可以看http://www.cnblogs.com/easonliu/p/4531020.html
+
 
 //我的代码,beat 100%
 public class Solution {
