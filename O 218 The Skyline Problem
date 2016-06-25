@@ -5,7 +5,7 @@ https://leetcode.com/problems/the-skyline-problem/
 
 
 我的思路:
-一开始想到线段树，但不熟悉线段树的分裂条件，所以用linked-node代替线段树。
+一开始想到线段树，但不熟悉线段树的建子树条件，所以用linked-node代替线段树。
 由于题目说了输入顺序是按照x的坐标递增的。
 
 别人思路：
