@@ -91,3 +91,81 @@ class Segment {                                     //段集合
         }
     }
 }
+
+
+
+***************************************************************
+Mid
+220 Contains Duplicate III
+Given an array of integers, find out whether there are two distinct indices i and j in the array 
+such that the difference between nums[i] and nums[j] is at most t and the difference between i and j is at most k.
+也就是如果存在|nums[i]-nums[j]|<=t 而且 |i-j|<=k，返回true
+
+
+我的思路：
+最坏O(K*N)，虽然beat 98%，但比较trick，所以不说了。
+
+别人思路：
+1. 用TreeSet,复杂度O(N*lgK)
+2. 分段，如果每段中存在两个数，返回true，否则判断与相邻的段的值。O(N)
+
+TreeSet-API:
+    add, contains, remove
+    higher, lower       返回大于, 小于key的值
+    ceiling, floor      返回大于等于，小于等于key的值
+TreeMap-API:
+    put, containsKey, remove
+    higherKey, lowerKey
+    ceilingKey, floorKey
+
+负数求余：
+    (-7)%(-5) = -2
+      7 %(-5) =  2
+    (-7)%  5  = -2      把除数和被除数化成整数来求余，再根据除数正负号给结果加正负号
+负整数除法：
+    (-7)/(-5) =  1
+      7 /(-5) = -1
+    (-7)/  5  = -1      把除数和被除数化成整数来除，再根据除法正负给结果加正负号
+
+
+//根据别人TreeSet我的代码：
+public class Solution {
+    public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+        TreeSet<Integer> set = new TreeSet<Integer>();
+        if (t < 0) return false;
+        for (int i=0; i<nums.length; i++) {
+            if (i-k>0) set.remove(nums[i-k-1]);
+            Integer lower=set.lower(nums[i]);
+            Integer higher=set.higher(nums[i]);
+            if (set.contains(nums[i]) || 
+                (lower != null && nums[i]-(long)lower <= t) || 
+                (higher != null && higher-(long)nums[i]<=t))
+                return true;
+            set.add(nums[i]);
+        }
+        return false;
+    }
+}
+
+//别人分段的代码：
+public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+    if (t < 0) return false;
+    Map<Long, Long> d = new HashMap<>();                                //存段位置和段里面的值
+    long w = (long) t + 1;
+    for (int i = 0; i < nums.length; ++i) {
+        long m = getID(nums[i], w);
+        if (d.containsKey(m))
+            return true;
+        if (d.containsKey(m - 1) && Math.abs(nums[i] - d.get(m - 1)) < w)
+            return true;
+        if (d.containsKey(m + 1) && Math.abs(nums[i] - d.get(m + 1)) < w)
+            return true;
+        d.put(m, (long) nums[i]);
+        if (i >= k) d.remove(getID(nums[i - k], w));
+    }
+    return false;
+}
+
+private long getID(long i, long w) {
+    return i < 0 ? (i+1)/w-1 : i/w;    //对负数分组的方法，这种做法只对离散i有效，好像写成(i-1)/w也可以
+}
