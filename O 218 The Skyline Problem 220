@@ -15,6 +15,7 @@ https://leetcode.com/problems/the-skyline-problem/
 heap根据height进行排序。
 实际根本思路是用最大堆，但堆不支持删除操作，所以要配合hashmap来用，延迟删除堆中元素，只是用标志位标志该元素是否删除了。
    大致好像是这样，具体可以看http://www.cnblogs.com/easonliu/p/4531020.html
+   其中代码mp[h]用于标志该高度隐式删除了多少次。
    可以参照https://briangordon.github.io/2014/08/the-skyline-problem.html的图
 复杂度O(N*lgN)
 
