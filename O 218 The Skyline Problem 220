@@ -10,8 +10,8 @@ https://leetcode.com/problems/the-skyline-problem/
 最坏复杂度O(N^2), N为建筑数目
 
 别人思路：（可以看成：近似实现了删除操作的最大堆）
-用最大堆heap和HashMap，把起点和终点（进行封装后,通过type区分起点终点）一起按位置进行排序，对起点用push操作把Node压到heap里面，
-同时加到hashmap里面。对于终点，在hashmap找到对应的结点Node,并设成null, heap检查自己的top是否被设成了null。
+用最大堆heap和HashMap，把起点和终点（进行封装后,通过type区分起点终点）一起按位置进行排序，对起点用push操作把height压到heap里面
+。对于终点，在hashmap找到对应的key=height，value++,表示隐性删除该结点多一次，heap检查自己的top是否需要删除。
 heap根据height进行排序。
 实际根本思路是用最大堆，但堆不支持删除操作，所以要配合hashmap来用，延迟删除堆中元素，只是用标志位标志该元素是否删除了。
    大致好像是这样，具体可以看http://www.cnblogs.com/easonliu/p/4531020.html
