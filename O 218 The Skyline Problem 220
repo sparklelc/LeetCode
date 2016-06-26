@@ -110,7 +110,7 @@ such that the difference between nums[i] and nums[j] is at most t and the differ
 
 
 我的思路：
-最坏O(K*N)，虽然beat 98%，但比较trick，所以不说了。
+最坏O(K*N)，虽然beat 98%，但比较trick，所以不说了, 主要用链表(利用hashmap优化链表中元素的删除)。
 
 别人思路：
 1. 用TreeSet,复杂度O(N*lgK)
