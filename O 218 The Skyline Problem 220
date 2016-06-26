@@ -167,5 +167,5 @@ public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
 }
 
 private long getID(long i, long w) {
-    return i < 0 ? (i+1)/w-1 : i/w;    //对负数分组的方法，这种做法只对离散i有效，好像写成(i-1)/w也可以
+    return i < 0 ? (i+1)/w-1 : i/w;               //对负数分组的方法，这种做法只对离散i有效，不能写成(i-1)/w   ！！！
 }
