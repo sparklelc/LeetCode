@@ -10,8 +10,11 @@ https://leetcode.com/problems/the-skyline-problem/
 最坏复杂度O(N^2), N为建筑数目
 
 别人思路：
-用堆max-heap，把起点和终点（进行封装后,通过type区分起点终点）一起按位置进行排序，对起点用push操作把其高度压到heap里面，
-对终点用pop操作。大致好像是这样，具体可以看http://www.cnblogs.com/easonliu/p/4531020.html
+用最大堆heap和HashMap，把起点和终点（进行封装后,通过type区分起点终点）一起按位置进行排序，对起点用push操作把Node压到heap里面，
+同时加到hashmap里面。对于终点，在hashmap找到对应的结点Node,并设成null, heap检查自己的top是否被设成了null。
+heap根据height进行排序。
+   大致好像是这样，具体可以看http://www.cnblogs.com/easonliu/p/4531020.html
+   可以参照https://briangordon.github.io/2014/08/the-skyline-problem.html的图
 复杂度O(N*lgN)
 
 
