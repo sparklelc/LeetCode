@@ -11,11 +11,11 @@ https://leetcode.com/problems/the-skyline-problem/
 
 别人思路：（可以看成：近似实现了删除操作的最大堆）
 用最大堆heap和HashMap，把起点和终点（进行封装后,通过type区分起点终点）一起按位置进行排序，对起点用push操作把height压到heap里面
-。对于终点，在hashmap找到对应的key=height，value++,表示隐性删除该结点多一次，heap检查自己的top是否需要删除。
+。对于终点，在hashmap找到对应的key=height，value++,表示隐性删除该高度多一次，heap检查自己的top是否需要删除。
 heap根据height进行排序。
-实际根本思路是用最大堆，但堆不支持删除操作，所以要配合hashmap来用，延迟删除堆中元素，只是用标志位标志该元素是否删除了。
+实际根本思路是用最大堆，但堆不支持删除操作，所以要配合hashmap来用，延迟删除堆中元素。
    大致好像是这样，具体可以看http://www.cnblogs.com/easonliu/p/4531020.html
-   其中代码mp[h]用于标志该高度隐式删除了多少次。
+   其中代码mp[h]用于标志该高度之后需要隐式删除多少次。
    可以参照https://briangordon.github.io/2014/08/the-skyline-problem.html的图
 复杂度O(N*lgN)
 
