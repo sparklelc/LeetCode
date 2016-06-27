@@ -1,0 +1,76 @@
+Mid:
+221 Maximal Square
+找最大的正方形
+Given a 2D binary matrix filled with 0's and 1's, find the largest square containing all 1's and return its area.
+For example, given the following matrix:
+  1 0 1 0 0
+  1 0 1 1 1
+  1 1 1 1 1
+  1 0 0 1 0
+Return 4.
+
+
+我的思路：
+  动态规划
+  arr[i][j] = Math.min(arr[i-1][j], arr[i][j-1], arr[i-1][j-1])+1    if matrix[i][j]=='1'
+            = 0                                                      if matrix[0][0]=='0'
+扩展：那么对于长方形是不是需要两个二维数组一个存长度一个存宽度？
+
+
+//我的代码
+public class Solution {
+    public int maximalSquare(char[][] matrix) {
+        int result = 0;
+        if (matrix == null || matrix.length == 0) return result;
+        int[][] arr = new int[matrix.length+1][matrix[0].length+1];
+        for (int i=1; i<=matrix.length; i++) 
+            for (int j=1; j<=matrix[0].length; j++) {
+                if (matrix[i-1][j-1] == '0')
+                    arr[i][j] = 0;
+                else {
+                    arr[i][j] = Math.min(Math.min(arr[i-1][j], arr[i][j-1]), arr[i-1][j-1])+1;
+                    result = Math.max(result, arr[i][j]);
+                }
+            }
+        return result*result;
+    }
+}
+
+
+**********************************************************************
+Mid
+222 Count Complete Tree Nodes
+Given a complete binary tree, count the number of nodes.
+
+我的思路:
+用二分查找加上hashmap来避免重复查找结点，超时，主要是hashmap太耗时，O(lgn*lgn)
+
+别人思路：
+递归+二分查找，O(lgn*lgn)，如果最左子结点的高度和最右子结点的高度不同，再分别判断左子树和右子树。
+
+//我参照别人思路的代码
+public class Solution {
+    public int countNodes(TreeNode root) {
+        return findCount(root, -1, -1);
+    }
+    
+    public int findCount(TreeNode root, int leftH, int rightH) {
+        if (root == null) return 0;
+        int leftHeight = leftH == -1? findHeight(root, 0): leftH;                       //找最左子结点的高度
+        int rightHeight = rightH == -1? findHeight(root, 1): rightH;                    //找最右子结点的高度
+        if (leftHeight == rightHeight)
+            return (1<<leftHeight)-1;                                               //移位符号<<的优先级比-号小，所以要加括号
+        else {
+            return 1 + findCount(root.left, leftHeight-1, -1) + findCount(root.right, -1 ,rightHeight-1);
+        }
+    }
+    
+    public int findHeight(TreeNode root, int t) {     //t=0表示向左找，t=1表示向右找
+        int h = 0;
+        while (root != null) {
+            root = t==0? root.left: root.right;
+            h++;
+        }
+        return h;
+    }
+}
