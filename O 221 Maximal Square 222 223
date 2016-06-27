@@ -74,3 +74,22 @@ public class Solution {
         return h;
     }
 }
+
+
+************************************************************
+Easy
+223 Rectangle Area
+给出两个长方形的坐标，求出它们的面积（重叠面积只计算一次）
+
+我的思路：
+根据两个长方形的最小的最右边界和最大的最左边界判断是否有重叠。
+
+public class Solution {
+    public int computeArea(int A, int B, int C, int D, int E, int F, int G, int H) {
+        long total = ((long)C-A)*((long)D-B) + ((long)G-E)*((long)H-F);
+        long replicate_length = (long)Math.min(C,G)-Math.max(A,E)>0? (long)Math.min(C,G)-Math.max(A,E): 0;
+        long replicate_height = (long)Math.min(D,H)-Math.max(B,F)>0? (long)Math.min(D,H)-Math.max(B,F): 0;
+        total -= replicate_length*replicate_height;
+        return (int) total;
+    }
+}
