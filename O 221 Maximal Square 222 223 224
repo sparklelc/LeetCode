@@ -93,3 +93,58 @@ public class Solution {
         return (int) total;
     }
 }
+
+
+
+************************************************************
+Hard
+224 Basic Calculator
+Implement a basic calculator to evaluate a simple expression string.
+The expression string may contain open ( and closing parentheses ), the plus + or minus sign -, non-negative integers 
+and empty spaces .
+You may assume that the given expression is always valid.
+
+Some examples:
+"1 + 1" = 2
+" 2-1 + 2 " = 3
+"(1+(4+5+2)-3)+(6+8)" = 23
+实现包含(,),+,-符号的计算器
+
+
+
+我的思路：
+用stack来处理，每遇到一个'('进入一个新层，遇到')'跳回上一层
+一个stack保存每层的数字值，一个stack保存'+','-'符号
+
+
+//我的代码：
+public class Solution {
+    public int calculate(String s) {
+        LinkedList<Long> stack = new LinkedList<Long>();
+        LinkedList<Character> stackP = new LinkedList<Character>();
+        stack.add(0L);
+        stackP.add('+');
+        for (int i=0; i<s.length(); i++) {
+            if (s.charAt(i) == ' ')
+                continue;
+            if (s.charAt(i) == '(') {
+                stack.add(0L);                                      //进入新层时添加 “(0 + .....
+                stackP.add('+');
+            }
+            else if (s.charAt(i) == ')') {
+                long v = stack.pollLast();
+                stack.add(stackP.pollLast()=='+'? stack.pollLast()+v: stack.pollLast()-v);
+            } else if (s.charAt(i) == '+' || s.charAt(i) == '-')
+                stackP.add(s.charAt(i));
+            else {
+                int lastIndex = i+1;
+                while (lastIndex < s.length() && s.charAt(lastIndex) <= '9' && s.charAt(lastIndex) >= '0')
+                    lastIndex ++;
+                int tem = Integer.valueOf(s.substring(i, lastIndex));
+                stack.add(stackP.pollLast()=='+'? stack.pollLast()+tem: stack.pollLast()-tem);
+                i = lastIndex-1;
+            }
+        }
+        return (int) stack.pollLast().longValue();
+    }
+}
