@@ -148,3 +148,51 @@ public class Solution {
         return (int) stack.pollLast().longValue();
     }
 }
+
+***************************************************
+227 Basic Calculator II
+Implement a basic calculator to evaluate a simple expression string.
+The expression string contains only non-negative integers, +, -, *, / operators and empty spaces ' '.
+The integer division should truncate toward zero.
+You may assume that the given expression is always valid.
+
+Some examples:
+"3+2*2" = 7
+" 3/2 " = 1
+" 3+5 / 2 " = 5
+
+我的思路：
+双向链表，先处理乘法，再处理加减法
+
+//我的代码：
+public class Solution {
+    public int calculate(String s) {
+        LinkedList<Long> num = new LinkedList<Long>();
+        LinkedList<Character> pStack = new LinkedList<Character>();
+        num.add(0L);
+        pStack.add('+');
+        for (int i=0; i<s.length(); i++) {
+            if (s.charAt(i) == ' ')
+                continue;
+            else if (s.charAt(i) == '+' || s.charAt(i) == '-' || s.charAt(i) == '*' || s.charAt(i) == '/')
+                pStack.add(s.charAt(i));
+            else {
+                int nextIndex = i + 1;
+                while (nextIndex < s.length() && s.charAt(nextIndex) >= '0' && s.charAt(nextIndex) <= '9')
+                    nextIndex++;
+
+                long thisNum = Long.valueOf(s.substring(i, nextIndex));
+                if (pStack.getLast() == '*' || pStack.getLast() == '/') 
+                    thisNum = pStack.pollLast()=='*'? num.pollLast()*thisNum: num.pollLast()/thisNum;
+                num.add(thisNum);
+                i = nextIndex-1;
+            }
+        }
+        while (num.size() != 1) {                     //处理加减法，顺序是从左到右
+            long tem = num.pollFirst();
+            long result = pStack.pollFirst()=='+' ? tem+num.pollFirst(): tem-num.pollFirst();
+            num.addFirst(result);
+        }
+        return (int) num.getLast().longValue();
+    }
+}
