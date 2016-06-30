@@ -51,3 +51,43 @@ public class Solution {
         return result;
     }
 }
+
+*************************************************************
+Easy
+230 Kth Smallest Element in a BST
+Given a binary search tree, write a function kthSmallest to find the kth smallest element in it.
+You may assume k is always valid, 1 ≤ k ≤ BST's total elements.
+在二叉搜索树（非平衡）中找出第k小的数
+
+我的思路：
+关键在于遍历中如果已经找到结果了，如何快速返回，而不再去做其它无用的判断。
+我的做法是返回一个特殊值表示结果已经找到，把结果设成全局变量
+
+
+//我的代码：
+public class Solution {
+    public int result = 0;
+    public int kthSmallest(TreeNode root, int k) {
+        findK(root, k);
+        return result;
+    }
+    
+    public int findK(TreeNode root, int k) {
+        if (root == null)
+            return 0;
+            
+        int left = findK(root.left, k);
+        if (left == Integer.MIN_VALUE) {                        //表示结果已经找到
+            return Integer.MIN_VALUE;
+        } else if (left+1 == k) {
+            result = root.val;
+            return Integer.MIN_VALUE;
+        } else {
+            int right = findK(root.right, k-left-1);
+            if (right == Integer.MIN_VALUE)
+                return Integer.MIN_VALUE;
+            else
+                return left + right + 1;
+        }
+    }
+}
