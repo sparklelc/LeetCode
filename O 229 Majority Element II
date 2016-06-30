@@ -37,7 +37,7 @@ public class Solution {
         }
         count[0] = 0;
         count[1] = 0;
-        for (int i=0; i<nums.length; i++) {
+        for (int i=0; i<nums.length; i++) {       //需要再遍历一次这里我一开始没想到
             Integer item = new Integer(nums[i]);
             if (item.equals(index[0]))
                 count[0] ++;
