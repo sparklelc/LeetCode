@@ -59,7 +59,7 @@ public class Solution {
         int leftHeight = leftH == -1? findHeight(root, 0): leftH;                       //找最左子结点的高度
         int rightHeight = rightH == -1? findHeight(root, 1): rightH;                    //找最右子结点的高度
         if (leftHeight == rightHeight)
-            return (1<<leftHeight)-1;                                               //移位符号<<的优先级比-号小，所以要加括号
+            return (1<<leftHeight)-1;                                         //移位符号<<的优先级比-号小(也比==小)，所以要加括号
         else {
             return 1 + findCount(root.left, leftHeight-1, -1) + findCount(root.right, -1 ,rightHeight-1);
         }
