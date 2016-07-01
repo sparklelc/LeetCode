@@ -101,7 +101,7 @@ Given an integer n, count the total number of digit 1 appearing in all non-negat
 For example:
 Given n = 13,
 Return 6, because digit 1 occurred in the following numbers: 1, 10, 11, 12, 13.
-计算小于等于某个数字的所有数字的1的个数
+计算小于等于某个数字的所有数字中'1'出现的次数
 
 我的思路：
 递归
