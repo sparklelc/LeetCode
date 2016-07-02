@@ -118,3 +118,42 @@ public class Solution {
         return (n/item)*countDigitOne(item-1) + countDigitOne(n%item) + Math.min(item, 1+n-item);
     }
 }
+
+
+******************************************************************
+Easy
+234 Palindrome Linked List
+Given a singly linked list, determine if it is a palindrome.
+Could you do it in O(n) time and O(1) space?
+判断一个链表是不是回文，要求O(n)时间和O(1)空间复杂度
+
+我的思路：
+用快慢指针来处理，把前面的node倒序排列
+
+//我的代码
+public class Solution {
+    public boolean isPalindrome(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head == null? null: head.next;
+        ListNode head2 = null;                                  //表示前面结点的倒序
+        ListNode head1 = null;                                  //表示后面结点
+        while (fast != null) {
+            ListNode slowNext = slow.next;
+            slow.next = head2;
+            head2 = slow;
+            head1 = slowNext;
+            slow = slowNext;
+            if (fast.next != null && fast.next.next == null) {
+                head1 = slowNext.next;
+                break;
+            } else
+                fast = fast.next == null? null: fast.next.next;
+        }
+        while (head1 != null) {                                 //前后链表的结点一一比较
+            if (head1.val != head2.val) return false;
+            head1 = head1.next;
+            head2 = head2.next;
+        }
+        return true;
+    }
+}
