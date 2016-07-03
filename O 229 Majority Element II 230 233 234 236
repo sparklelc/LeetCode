@@ -176,6 +176,9 @@ Another example is LCA of nodes 5 and 4 is 5, since a node can be a descendant o
 递归找,保存每个结点的路径链表,找到了把全局变量find设置成true
 注意：题目没说每个结点的val值互不相同，所以只能用TreeNode引用来判断结点，而不能用val值来判断结点。
 
+别人思路：
+其实没有必要保存路径，直接递归找就可以，如果某一结点等于root, 说明root是LCA, 如果两个都不等于root，再分别判断左右子树。
+
 //我的代码:
 public class Solution {
     boolean find1 = false;
@@ -204,5 +207,18 @@ public class Solution {
             if (!find1) tree1.removeLast();
             if (!find2) tree2.removeLast();
         }
+    }
+}
+
+//根据别人思路我的代码
+public class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || p == root || q == root) 
+            return root;
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+        if (left != null && right != null)
+            return root;
+        return left == null? right: left;
     }
 }
