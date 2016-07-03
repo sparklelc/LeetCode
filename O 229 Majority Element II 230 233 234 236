@@ -157,3 +157,52 @@ public class Solution {
         return true;
     }
 }
+
+
+*****************************************************
+Mid
+236 Lowest Common Ancestor of a Binary Tree
+        _______3______
+       /              \
+    ___5__          ___1__
+   /      \        /      \
+   6      _2       0       8
+         /  \
+         7   4
+For example, the lowest common ancestor (LCA) of nodes 5 and 1 is 3. 
+Another example is LCA of nodes 5 and 4 is 5, since a node can be a descendant of itself according to the LCA definition.
+
+我的思路:
+递归找,保存每个结点的路径链表,找到了把全局变量find设置成true
+注意：题目没说每个结点的val值互不相同，所以只能用TreeNode引用来判断结点，而不能用val值来判断结点。
+
+//我的代码:
+public class Solution {
+    boolean find1 = false;
+    boolean find2 = false;
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        LinkedList<TreeNode> tree1 = new LinkedList<TreeNode>();
+        LinkedList<TreeNode> tree2 = new LinkedList<TreeNode>();
+        find(root, tree1, tree2, p, q);
+        TreeNode result = null;
+        while (tree2.size() >= 1 && tree1.size() >= 1 && tree1.getFirst() == tree2.getFirst()) {
+            result = tree1.getFirst();
+            tree1.removeFirst();
+            tree2.removeFirst();
+        }
+        return result;
+    }
+    
+    public void find(TreeNode root, LinkedList<TreeNode> tree1, LinkedList<TreeNode> tree2, TreeNode val1, TreeNode val2) {
+        if (root != null) {
+            if (!find1) tree1.add(root);
+            if (!find2) tree2.add(root);
+            if (root == val1) find1 = true;
+            if (root == val2) find2 = true;
+            if (!find1 || !find2) find(root.left, tree1, tree2, val1, val2);
+            if (!find1 || !find2) find(root.right, tree1, tree2, val1, val2);
+            if (!find1) tree1.removeLast();
+            if (!find2) tree2.removeLast();
+        }
+    }
+}
