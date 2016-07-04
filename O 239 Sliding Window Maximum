@@ -1,0 +1,50 @@
+Hard:
+239 Sliding Window Maximum
+Given an array nums, there is a sliding window of size k which is moving from the very left of the array to the very right. 
+You can only see the k numbers in the window. Each time the sliding window moves right by one position.
+For example,
+Given nums = [1,3,-1,-3,5,3,6,7], and k = 3.
+Window position                Max
+---------------               -----
+[1  3  -1] -3  5  3  6  7       3
+ 1 [3  -1  -3] 5  3  6  7       3
+ 1  3 [-1  -3  5] 3  6  7       5
+ 1  3  -1 [-3  5  3] 6  7       5
+ 1  3  -1  -3 [5  3  6] 7       6
+ 1  3  -1  -3  5 [3  6  7]      7
+Therefore, return the max sliding window as [3,3,5,5,6,7].
+移动段，每次返回段内最大值
+
+
+我的思路：
+MaxHeap+HashMap,本质上是实现了删除操作的MaxHeap
+复杂度O(n*lgk)
+
+别人思路：
+直接用LinkedList，比如[1]，再进来一个3，实际上没必要保存1的索引了，因为3总比1要后出而且3>1。
+复杂度O(n)
+
+
+
+//别人代码
+public class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if(k==0) return new int[0];
+        
+        LinkedList<Integer> q = new LinkedList<Integer>();       //保存的是index
+        int[] res = new int[nums.length-k+1];
+        
+        for(int i=0; i<nums.length; i++) {
+            while(!q.isEmpty() && nums[i]>=nums[q.getLast()])
+                q.removeLast();
+            q.addLast(i);
+            
+            if(i-q.getFirst()+1 > k)
+                q.removeFirst();
+                
+            if(i+1 >= k) 
+                res[i-k+1] = nums[q.getFirst()];
+        }
+        return res;
+    }
+}
