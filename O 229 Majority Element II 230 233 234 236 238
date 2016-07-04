@@ -222,3 +222,18 @@ public class Solution {
         return left == null? right: left;
     }
 }
+
+
+******************************************************************
+Mid
+238 Product of Array Except Self
+Given an array of n integers where n > 1, nums, 
+return an array output such that output[i] is equal to the product of all the elements of nums except nums[i].
+Solve it without division and in O(n).
+For example, given [1,2,3,4], return [24,12,8,6].
+
+求一个数组, 对每个元素计算除了自己以外的其他元素的乘积.要求不能用除法
+
+我的思路:
+一个元素除自己以外的其他元素乘积等于'左边元素乘积'乘以'右边元素乘积'
+从左向右一次,再从右向左一次
