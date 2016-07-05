@@ -49,3 +49,95 @@ public class Solution {
         return res;
     }
 }
+
+
+**********************************************************************
+241 Different Ways to Add Parentheses
+Input: "2*3-4*5"
+(2*(3-(4*5))) = -34
+((2*3)-(4*5)) = -14
+((2*(3-4))*5) = -10
+(2*((3-4)*5)) = -10
+(((2*3)-4)*5) = 10
+Output: [-34, -14, -10, -10, 10]
+输出任意加括号情况下所有可能的结果
+
+我的思路：
+用stack+递归，很慢90ms
+
+别人思路：
+用分治+递归，9ms
+
+注意：
+LinkedList stack = new LinkedList();
+while (stack.size() != 0) {
+  stack = new LinkedList();     //不要这样写代码，编译器可能会认为判断条件的stack是外面的stack，而不是重新赋值的stack
+}
+
+//我的代码
+public class Solution {
+    ArrayList<Integer> result = new ArrayList<Integer>();
+    public List<Integer> diffWaysToCompute(String input) {
+        if (input == null) return result;
+        findPath(input, 0, new LinkedList<Integer>(), new LinkedList<Character>());
+        return result;
+    }
+    
+    public void findPath(String input, int index, LinkedList<Integer> num, LinkedList<Character> p) {
+        if (index >= input.length()) {
+            if (p.size() == 0) 
+                result.add(num.getFirst());
+        } else if (input.charAt(index) == ' ') {
+            findPath(input, index+1, num, p);
+        } else if (input.charAt(index) == '*' || input.charAt(index) == '+' || input.charAt(index) == '-') {
+            p.add(input.charAt(index));
+            findPath(input, index+1, num, p);
+        } else {
+            int lastIndex = index+1;
+            while (lastIndex<input.length() && input.charAt(lastIndex)>='0' && input.charAt(lastIndex)<='9')
+                lastIndex++;
+            int item = Integer.valueOf(input.substring(index, lastIndex));
+            num.add(item);                                                                        
+            findPath(input, lastIndex, new LinkedList<Integer>(num), new LinkedList<Character>(p));    //注意一定要重新new一个
+            while (p.size() >= 1) {
+                item = num.pollLast();
+                int n = num.pollLast();
+                char pChar = p.pollLast();
+                if (pChar == '*')
+                    n = n*item;
+                else if (pChar == '-')
+                    n = n-item;
+                else
+                    n = n+item;
+                num.addLast(n);
+                System.out.println(p.size() + " " + num.getFirst());
+                findPath(input, lastIndex, new LinkedList<Integer>(num), new LinkedList<Character>(p));
+            }
+        }
+    }
+}
+
+//我参照别人的代码：
+public class Solution {
+    public List<Integer> diffWaysToCompute(String input) {
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        for (int i=0; i<input.length(); i++) {
+            if (input.charAt(i) == '-' || input.charAt(i) == '*' || input.charAt(i) == '+') {
+                List<Integer> resultLeft = diffWaysToCompute(input.substring(0,i));
+                List<Integer> resultRight = diffWaysToCompute(input.substring(i+1,input.length()));
+                for (int left: resultLeft)
+                    for (int right: resultRight) {
+                        if (input.charAt(i) == '-') 
+                            result.add(left-right);
+                        else if (input.charAt(i) == '*') 
+                            result.add(left*right);
+                        else 
+                            result.add(left+right);
+                    }
+            }
+        }
+        if (result.size() == 0)                           //这个判断想法比较好
+            result.add(Integer.valueOf(input));
+        return result;
+    }
+}
