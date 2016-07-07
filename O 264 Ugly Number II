@@ -1,0 +1,33 @@
+Mid
+264 Ugly Number II
+Write a program to find the n-th ugly number.
+Ugly numbers are positive numbers whose prime factors only include 2, 3, 5. 
+For example, 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 is the sequence of the first 10 ugly numbers.
+Note that 1 is typically treated as an ugly number.
+找出第i个丑数
+
+别人思路：
+某个丑数一定是另外一个丑数的2,3或5倍，用index2,index3,index5标志位置
+每次取三个丑数的结果中的最小值
+
+//参照别人我的代码
+public class Solution {
+    public int nthUglyNumber(int n) {
+        int[] result = new int[n+1];
+        result[1] = 1;
+        int index2=1, index3=1, index5=1;
+        
+        int count = 1;
+        while (count < n) {
+            count++;
+            result[count] = Math.min(result[index2]*2, Math.min(result[index3]*3, result[index5]*5));
+            if (result[count] == result[index2]*2)
+                index2++;
+            if (result[count] == result[index3]*3)        //注意不能用else if，因为比如2*3 == 3*2，如果重复只取一次
+                index3++;
+            if (result[count] == result[index5]*5)
+                index5++;
+        }
+        return result[n];
+    }
+}
