@@ -52,6 +52,7 @@ public class Solution {
 
 
 **********************************************************************
+Mid
 241 Different Ways to Add Parentheses
 Input: "2*3-4*5"
 (2*(3-(4*5))) = -34
@@ -139,6 +140,46 @@ public class Solution {
         }
         if (result.size() == 0)                           //这个判断想法比较好
             result.add(Integer.valueOf(input));
+        return result;
+    }
+}
+
+
+**********************************************************************
+Mid
+260 Single Number III
+Given an array of numbers nums, in which exactly two elements appear only once and 
+all the other elements appear exactly twice. Find the two elements that appear only once.
+  For example:
+  Given nums = [1, 2, 1, 3, 2, 5], return [3, 5]
+一个数组里面有两个数只出现一次,而其他数字出现了两次,找出这两个数字.
+
+
+别人思路：
+1. 取得这两个数异或的结果
+2. 任取异或结果中的某一个为1的位
+3. 如果某个数的该位为1，与result[0]异或，或则与result[1]异或，由于其他数字出现两次，异或后可以抵消其他数字
+
+//参照别人思路我的代码
+public class Solution {
+    public int[] singleNumber(int[] nums) {
+        int diff = 0;
+        for (int num: nums)
+            diff ^= num;
+          
+        // int i = 1<<31;         //实际上任意找出某个位置能使两个不同的就行
+        // while ((i&diff) == 0)  //找最前面为1的那位
+        //     i>>>=1;
+        // diff = i;
+        
+        diff &= -(diff-1);        //或者这样写表示找最后为1的那位
+        int[] result = {0, 0};
+        for (int num: nums) {
+            if ((num & diff) == 0)
+                result[0] ^= num;
+            else
+                result[1] ^= num; 
+        }
         return result;
     }
 }
