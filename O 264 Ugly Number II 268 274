@@ -53,3 +53,39 @@ public int missingNumber(int[] nums) {
     }
     return res;
 }
+
+************************************************************************
+Mid
+274 H-Index
+According to the definition of h-index on Wikipedia: "A scientist has index h if h of his/her N papers have at least h citations
+each, and the other N − h papers have no more than h citations each."
+For example, given citations = [3, 0, 6, 1, 5], which means the researcher has 5 papers in total and each of them had received 
+3, 0, 6, 1, 5 citations respectively. Since the researcher has 3 papers with at least 3 citations each and the remaining two 
+with no more than 3 citations each, his h-index is 3.
+至少h篇论文被索引h次
+
+我的思路:
+排序,复杂度O(n*lgn)
+
+别人思路：
+用数组进行计数，所有大于citations.length的都记在count[citations.length]上面
+复杂度O(n)
+
+//参照别人我的代码
+public class Solution {
+    public int hIndex(int[] citations) {
+        int[] count = new int[citations.length+1];       //用于计数的作用
+        for (int i=0; i<citations.length; i++) {
+            if (citations[i] >= citations.length)
+                count[citations.length]++;               //大于citations.length的值全部计入count[citations.length]
+            else
+                count[citations[i]]++;
+        }
+        int total=0;
+        for (int i=citations.length; i>=0; i--) {
+            total += count[i];
+            if (total >= i) return i;
+        }
+        return 0;
+    }
+}
