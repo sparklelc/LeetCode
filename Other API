@@ -1,0 +1,11 @@
+new Scanner(new File("0.in"))  // 不能直接用‘文件名string’作为Scanner的参数
+new Scanner(System.in)
+System.setOut(new PrintStream("0.out"))
+
+
+注意
+sc.nextInt()或者sc.next()后面如果需要使用sc.nextLine(),需要在中间再加一次sc.nextLine()来清除'\r\n'
+比如：
+123         //sc.nextInt() => '123',   sc.nextLine() => '\r\n'
+next next   //sc.nextLine() => "next next"  因为sc.next()会以空格作为分割符，所以必须用nextLine
+
