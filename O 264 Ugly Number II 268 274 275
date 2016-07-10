@@ -105,9 +105,9 @@ public class Solution {
         if (citations == null || citations.length == 0) return 0;
         int length = citations.length;
         int l=0, r=length;                                       // l表示不满足条件的那位，r表示满足条件的那位
-        if (citations[l] >= length) return length;
+        if (citations[l] >= length) return length;               
         while (l < r-1) {
-            int m = (l+r)/2;
+            int m = (l+r)/2;                                     // 可以写成l+(r-l)/2来避免r+l>Integer.MAX_VALUE
             if (citations[m] < length-m)
                 l = m;
             else
