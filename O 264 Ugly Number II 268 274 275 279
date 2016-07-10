@@ -116,3 +116,32 @@ public class Solution {
         return length-r;
     }
 }
+
+**************************************************************
+Mid
+279 Perfect Squares
+Given a positive integer n, find the least number of perfect square numbers (for example, 1, 4, 9, 16, ...) which sum to n.
+For example, given n = 12, return 3 because 12 = 4 + 4 + 4; given n = 13, return 2 because 13 = 4 + 9.
+判断一个数最少可以表示成多少个数平方的相加
+
+思路：
+  动态规划
+我的思路：二维动归，dp[n][i]表示n最大组成只有i平方的情况下的最好结果
+别人思路：一维动归
+
+//别人代码：
+public int numSquares(int n) {
+	int[] dp = new int[n + 1];
+	Arrays.fill(dp, Integer.MAX_VALUE);
+	dp[0] = 0;
+	for(int i = 1; i <= n; ++i) {
+		int min = Integer.MAX_VALUE;
+		int j = (int) Math.sqrt(i);
+		while(j >= 1) {
+			min = Math.min(min, dp[i - j*j] + 1);
+			j--;
+		}
+		dp[i] = min;
+	}		
+	return dp[n];
+}
