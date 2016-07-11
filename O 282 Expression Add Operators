@@ -11,6 +11,7 @@ Examples:
   
 我的思路：
 找出所有string，找完后判断每个string的结果是否与target相同
+beat 0.83% 慢
 
 别人思路：
 缓存前面的结果
