@@ -58,3 +58,40 @@ public class Solution {
         }
     }
 }
+
+
+************************************************************
+Hard:
+287 Find the Duplicate Number
+Given an array nums containing n + 1 integers where each integer is between 1 and n (inclusive), 
+prove that at least one duplicate number must exist. Assume that there is only one duplicate number, find the duplicate one.
+Note:
+You must not modify the array (assume the array is read only).
+You must use only constant, O(1) extra space.
+Your runtime complexity should be less than O(n2).
+There is only one duplicate number in the array, but it could be repeated more than once.
+找出重复的数(可以重复多次)
+
+别人思路:
+类似于链表找环交点，复杂度O(n).
+由于index范围是0-(n-1)，而数字范围是1-n,所以从index=0开始找理论上只有有重复数字的时候才会形成环路，而重复数字就是环交点.
+
+
+//参照别人思路我的代码
+public class Solution {
+    public int findDuplicate(int[] nums) {
+        if (nums == null || nums.length < 2) return -1;
+        int fast = nums[nums[0]];
+        int slow = nums[0];
+        while (fast != slow) {
+            fast = nums[nums[fast]];
+            slow = nums[slow];
+        }
+        fast = 0;
+        while (fast != slow) {
+            fast = nums[fast];
+            slow = nums[slow];
+        }
+        return slow;
+    }
+}
