@@ -75,7 +75,7 @@ There is only one duplicate number in the array, but it could be repeated more t
 别人思路:
 类似于链表找环交点，复杂度O(n).
 由于index范围是0-n，而数字范围是1-n,所以从index=0开始找理论上只有有重复数字的时候才会形成环路，而重复数字就是环交点.
-
+另外一种方法是二分查找，复杂度O(nlgn)，判断比某个数大的元素的个数。
 
 //参照别人思路我的代码
 public class Solution {
