@@ -95,3 +95,79 @@ public class Solution {
         return slow;
     }
 }
+
+
+*****************************************************************************
+295 Find Median from Data Stream
+Median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value. 
+So the median is the mean of the two middle value.
+     找中位数,设计支持'插入'和'找中位数'的数据结构
+Examples: 
+[2,3,4] , the median is 3
+[2,3], the median is (2 + 3) / 2 = 2.5
+Design a data structure that supports the following two operations:
+     void addNum(int num) - Add a integer number from the data stream to the data structure.
+     double findMedian() - Return the median of all elements so far.
+
+我的思路:
+双向链表,记录中间位置,插入操作时间复杂度O(n),查找操作时间复杂度O(1)
+
+别人思路：
+两个堆,插入操作时间复杂度O(lgn)，查找操作时间复杂度O(1)
+
+//我参照别人思路的代码：
+public class MedianFinder {
+    int size = 0;
+    PriorityQueue<Integer> pre = new PriorityQueue<Integer>(new Comparator<Integer>(){
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            return -o1.compareTo(o2);
+        }
+    });
+    PriorityQueue<Integer> next = new PriorityQueue<Integer>(new Comparator<Integer>(){
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            return o1.compareTo(o2);
+        }
+    });
+    
+    public void addNum(int num) {
+        if (size % 2 == 1) {
+            if (next.peek() == null || next.peek() > num) {
+                pre.add(num);
+                next.add(pre.poll());
+            } else {
+                next.add(num);
+            }
+        } else {
+            if (pre.peek() == null || next.peek() >= num) {
+                pre.add(num);
+            } else {
+                pre.add(next.poll());
+                next.add(num);
+            }
+        }
+        size++;
+    }
+
+    public double findMedian() {
+        return size%2==1 ? pre.peek(): (pre.peek()+next.peek())/2.0;
+    }
+};
+
+//别人代码，更加简洁
+class MedianFinder {
+    private Queue<Long> small = new PriorityQueue(),
+                        large = new PriorityQueue();
+
+    public void addNum(int num) {
+        large.add((long) num);
+        small.add(-large.poll());
+        if (large.size() < small.size())
+            large.add(-small.poll());
+    }
+
+    public double findMedian() {
+        return large.size()>small.size() ? large.peek() : (large.peek()-small.peek())/2.0;
+    }
+};
