@@ -171,3 +171,15 @@ class MedianFinder {
         return large.size()>small.size() ? large.peek() : (large.peek()-small.peek())/2.0;
     }
 };
+
+
+***************************************************
+Mid
+297 Serialize and Deserialize Binary Tree
+序列化和反序列化Binary Tree
+
+我的思路:
+用LinkedList<>来作为stack，逐层处理.
+
+别人思路：
+递归，时间会快一点.
