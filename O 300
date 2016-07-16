@@ -28,7 +28,7 @@ public class Solution {
         int size = 0;
         for (int num: nums) {
             int i=0;
-            int j=size;                      //i和j都在范围内的情况下, 更新i是i=mid+1
+            int j=size;                      //二分查找，在i和j都在范围内的情况下, 更新i是i=mid+1
             while (i != j) {
                 int mid = (i+j)/2;
                 if (arr[mid]<num)
