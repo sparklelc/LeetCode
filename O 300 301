@@ -56,6 +56,8 @@ Examples:
    
 别人思路:
 第一遍去掉不满足的')'，第二遍去掉不满足的'('
+注意避免得到相同的结果，比如())删第2个或者第三个')'得到的结果其实是相同的。
+本题的判断方法比较好，可以深入思考下。
 
 
 //参照别人思路我的代码
@@ -76,14 +78,14 @@ public class Solution {
                 
             if (count < 0) {
                 for (int j=lastJ; j<=i; j++) {
-                    if (s.charAt(j) == params[1] && (j==lastJ || s.charAt(j-1)!=params[1]))
+                    if (s.charAt(j) == params[1] && (j==lastJ || s.charAt(j-1)!=params[1]))      //避免重复的结果
                         find(s.substring(0, j)+s.substring(j+1, s.length()), i, j, params);
                 }
                 return;
             }
         }
         
-        String re = new StringBuilder(s).reverse().toString();
+        String re = new StringBuilder(s).reverse().toString();                                    //第二次处理
         if (params[0] == '(')
             find(re, 0, 0, new char[]{')', '('});
         else
