@@ -1,0 +1,250 @@
+Mid
+300 Longest Increasing Subsequence
+Given an unsorted array of integers, find the length of longest increasing subsequence.
+For example,
+   Given [10, 9, 2, 5, 3, 7, 101, 18],
+   The longest increasing subsequence is [2, 3, 7, 101], therefore the length is 4. 
+Note that there may be more than one LIS combination, it is only necessary for you to return the length.
+   Your algorithm should run in O(n2) complexity.
+   Follow up: Could you improve it to O(n log n) time complexity?
+找最长的递增序列的长度
+
+我的思路：
+最容易想到的动态规划O(n*n)
+但我用min-heap做，实际上用堆做的复杂度为O(n*n*lgn)
+
+别人思路：
+二分查找，复杂度O(n*lgn)
+For example, say we have nums = [4,5,6,3], then all the available increasing subsequences are:
+  len = 1 :   [4], [5], [6], [3]   => tails[0] = 3
+  len = 2 :   [4, 5], [5, 6]       => tails[1] = 5
+  len = 3 :   [4, 5, 6]            => tails[2] = 6
+用一个新的数组tail[i]来表示递增长度为i的所有序列中最后一位最小是多少。
+
+//我参照别人的代码
+public class Solution {
+    public int lengthOfLIS(int[] nums) {
+        int[] arr = new int[nums.length];
+        int size = 0;                        //限定二叉搜索范围
+        for (int num: nums) {
+            int i=0;
+            int j=size;                      //二分查找，在i和j都在范围内的情况下, 更新i是i=mid+1
+            while (i != j) {
+                int mid = (i+j)/2;
+                if (arr[mid]<num)
+                    i = mid+1;
+                else
+                    j = mid;
+            }
+            arr[j] = num;
+            if (j == size) size++;
+        }
+        return size;
+    }
+}
+
+
+***************************************************************************
+Hard
+301 Remove Invalid Parentheses
+Remove the minimum number of invalid parentheses in order to make the input string valid. Return all possible results.
+Note: The input string may contain letters other than the parentheses ( and ).
+Examples:
+   "()())()" -> ["()()()", "(())()"]
+   "(a)())()" -> ["(a)()()", "(a())()"]
+   ")(" -> [""]
+   
+别人思路:
+第一遍去掉不满足的')'，第二遍去掉不满足的'('
+注意避免得到相同的结果，比如())删第2个或者第三个')'得到的结果其实是相同的。
+本题的判断方法比较好，可以深入思考下。
+
+
+//参照别人思路我的代码
+public class Solution {
+    ArrayList<String> result = new ArrayList<String>();
+    public List<String> removeInvalidParentheses(String s) {
+        find(s, 0, 0, new char[]{'(', ')'});
+        return result;
+    }
+    
+    public void find(String s, int lastI, int lastJ, char[] params) {
+        int count = 0;
+        for (int i=lastI; i<s.length(); i++) {
+            if (s.charAt(i) == params[0])
+                count++;
+            else if (s.charAt(i) == params[1])
+                count--;
+                
+            if (count < 0) {
+                for (int j=lastJ; j<=i; j++) {
+                    if (s.charAt(j) == params[1] && (j==lastJ || s.charAt(j-1)!=params[1]))      //避免重复的结果
+                        find(s.substring(0, j)+s.substring(j+1, s.length()), i, j, params);
+                }
+                return;
+            }
+        }
+        
+        String re = new StringBuilder(s).reverse().toString();                                    //第二次处理
+        if (params[0] == '(')
+            find(re, 0, 0, new char[]{')', '('});
+        else
+            result.add(re);
+    }
+}
+
+
+***************************************************************************
+Mid
+306 Additive Number
+Additive number is a string whose digits can form additive sequence.
+A valid additive sequence should contain at least three numbers. 
+Except for the first two numbers, each subsequent number in the sequence must be the sum of the preceding two.
+
+For example:
+"112358" is an additive number because the digits can form an additive sequence: 1, 1, 2, 3, 5, 8.
+   1 + 1 = 2, 1 + 2 = 3, 2 + 3 = 5, 3 + 5 = 8
+"199100199" is also an additive number, the additive sequence is: 1, 99, 100, 199.
+   1 + 99 = 100, 99 + 100 = 199
+   
+我的思路:
+如果前两个数固定,那么后面结果其实是唯一的.
+
+// 我的代码:
+public class Solution {
+    public boolean isAdditiveNumber(String num) {
+        for (int i=1; i<num.length() && i<=10; i++) {
+            for (int j=i+1; j<num.length() && j-i<=10; j++) {
+                if (num.charAt(i) == '0') {
+                    if (find(num, 0, i, j))
+                        return true;
+                    else
+                        break;
+                }
+                if (find(num, 0, i, j))
+                    return true;
+            }
+            if (num.charAt(0) == '0')
+                break;
+        }
+        return false;
+    }
+    
+    public boolean find(String num, int start, int one, int two) {
+        if (two == num.length()) return true;
+        long first = Long.valueOf(num.substring(start, one));
+        long second = Long.valueOf(num.substring(one, two));
+        int length = Math.max(one-start, two-one);
+        if (num.charAt(two) == '0') {
+            if (first + second == 0)
+                return find(num, one, two, two+1);
+            else
+                return false;
+        } else {
+            for (int three=two+length; three<=two+length+1 && three<=num.length() && three-two<=10; three++) {
+                long third = Long.valueOf(num.substring(two, three));
+                if (first+second == third) {
+                    if (find(num, one, two, three)) {
+                        System.out.println(first+" "+second+" "+third);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+}
+
+***************************************************************************
+Mid
+307 Range Sum Query - Mutable
+Given an integer array nums, find the sum of the elements between indices i and j (i ≤ j), inclusive.
+The update(i, val) function modifies nums by updating the element at index i to val.
+Example:
+  Given nums = [1, 3, 5]
+  sumRange(0, 2) -> 9
+  update(1, 2)
+  sumRange(0, 2) -> 8
+
+思路:
+线段树Segment Tree,每个结点保存其所有子结点的总和。
+别人有用Binary Index Tree做的，会快一点。
+
+//代码
+public class NumArray {
+    TreeNode root;
+
+    public NumArray(int[] nums) {
+        if (nums == null || nums.length == 0)  return;
+        root = construct(nums, 0, nums.length);
+    }
+
+    void update(int i, int val) {
+        update(i, val, root);
+    }
+    
+    int update(int i, int val, TreeNode n) {
+        if (n.leftIndex+1 == n.rightIndex) {
+            int last = n.value;
+            n.value = val;
+            return val - last;
+        }
+        int mid = (n.leftIndex+n.rightIndex)/2;
+        if (i<mid) {
+            int diff = update(i, val, n.left);
+            n.value += diff;
+            return diff;
+        } else {
+            int diff = update(i, val, n.right);
+            n.value += diff;
+            return diff;
+        }
+    }
+
+    public int sumRange(int i, int j) {
+        return calRange(i, j, root);
+    }
+    
+    public int calRange(int i, int j, TreeNode n) {
+        if (n.leftIndex >= i && n.rightIndex <= j+1)
+            return n.value;
+        int result = 0;
+        int mid = (n.leftIndex + n.rightIndex)/2;
+                
+        if (mid>j)
+            result = calRange(i, j, n.left);
+        else if (mid<=i)
+            result = calRange(i, j, n.right);
+        else
+            result = calRange(i, j, n.left)+calRange(i, j, n.right);
+        return result;
+    }
+    
+    public TreeNode construct(int[] nums, int left, int right) {
+        if (left+1 == right) {
+            return new TreeNode(left, right, nums[left]);
+        } else {
+            int mid = (left+right)/2;
+            TreeNode leftNode = construct(nums, left, mid);
+            TreeNode rightNode = construct(nums, mid, right);
+            TreeNode rootNode = new TreeNode(left, right, rightNode.value+leftNode.value);
+            rootNode.left = leftNode;
+            rootNode.right = rightNode;
+            return rootNode;
+        }
+    }
+}
+
+class TreeNode {
+    TreeNode left;
+    TreeNode right;
+    int leftIndex;
+    int rightIndex;
+    int value;
+    
+    public TreeNode(int l, int r, int v) {
+        leftIndex = l;
+        rightIndex = r;
+        value = v;
+    }
+}
