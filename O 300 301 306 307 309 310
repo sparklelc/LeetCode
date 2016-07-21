@@ -249,6 +249,7 @@ class TreeNode {
     }
 }
 
+
 ***************************************************************************
 Mid
 309 Best Time to Buy and Sell Stock with Cooldown
@@ -267,15 +268,8 @@ Example:
 别人思路：
   buy[i]表示在第i天之前最后一个操作是买，此时的最大收益。
   sell[i]表示在第i天之前最后一个操作是卖，此时的最大收益。
-  rest[i]表示在第i天之前最后一个操作是冷冻期，此时的最大收益。
-  我们写出递推式为：
-  buy[i]  = max(rest[i-1]-price, buy[i-1])      //买入操作要减price
-  sell[i] = max(buy[i-1]+price, sell[i-1])
-  rest[i] = max(sell[i-1], buy[i-1], rest[i-1])
-
-  另外，由于冷冻期的存在，我们可以得出rest[i] = sell[i-1]，这样，我们可以将上面三个递推式精简到两个：
-  buy[i]  = max(sell[i-2]-price, buy[i-1])
-  sell[i] = max(buy[i-1]+price, sell[i-1])
+    buy[i]  = max(sell[i-2]-price, buy[i-1])
+    sell[i] = max(buy[i-1]+price, sell[i-1])
   
   
 //别人代码
@@ -288,4 +282,65 @@ public int maxProfit(int[] prices) {
         sell = Math.max(prev_buy + price, prev_sell);
     }
     return sell;
+}
+
+
+***************************************************************************
+Mid
+310 Minimum Height Trees
+For a undirected graph with tree characteristics, we can choose any node as the root. The result graph is then a rooted tree. 
+Among all possible rooted trees, those with minimum height are called minimum height trees (MHTs). Given such a graph, 
+write a function to find all the MHTs and return a list of their root labels.
+
+Given n = 6, edges = [[0, 3], [1, 3], [2, 3], [4, 3], [5, 4]]
+     0  1  2
+      \ | /
+        3
+        |
+        4
+        |
+        5
+return [3, 4]
+
+
+我的思路：
+构造出图任意两两结点之间最短距离, 复杂度O(n*n*n*e)
+
+别人思路：
+从外面结点向里面结点遍历, 类似拓扑排序找入度为1的, 复杂度O(n)
+
+//我参照别人的代码
+public class Solution {
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        ArrayList<HashSet<Integer>> num = new ArrayList<HashSet<Integer>>();
+        for (int i=0; i<n; i++)
+            num.add(new HashSet<Integer>());
+        for (int[] e: edges) {
+            num.get(e[0]).add(e[1]);
+            num.get(e[1]).add(e[0]);
+        }
+        
+        ArrayList<Integer> res = new ArrayList<Integer>();
+        for (int i=0; i<n; i++)
+            if (num.get(i).size() == 1 || num.get(i).size() == 0)
+                res.add(i);
+        
+        while (true) {
+            ArrayList<Integer> newRes = new ArrayList<Integer>();
+            for (int item: res) {
+                int tem = 0;
+                for (int t: num.get(item)) {
+                    num.get(t).remove(item);
+                    if (num.get(t).size() == 1)
+                        newRes.add(t);
+                    tem = t;
+                }
+                num.get(item).remove(tem);
+            }
+            if (newRes.size() == 0)
+                break;
+            res = newRes;
+        }
+        return res;
+    }
 }
