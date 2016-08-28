@@ -4,7 +4,7 @@ For example, given n = 3, a solution set is:
 n=1 ()
 n=2 (())， ()()
 
-高阶元素都是由子元素组成：("(" + insert + ")" + tail);
+高阶元素都是由子元素组成："(" + insert + ")" + tail;
 
 网上的解法：
 For 2, it should place one "()" and add another one insert it but none tail it,
