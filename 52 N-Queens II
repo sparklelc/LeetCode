@@ -1,8 +1,5 @@
 和上一题类似,参照上一题别人的代码
 
-我的代码,在eclipse能通过，但在leetcode上的结果和eclipse的结果不同。
-可能leetcode的编译器的问题，可能是开了优化
-
 public class Solution {
     public static int totalnum = 0;
     public int totalNQueens(int n) {
@@ -15,7 +12,9 @@ public class Solution {
 
         dfs(n, map, col, left, right, 0);
         
-        return totalnum;
+        int tem = totalnum;
+        totalnum = 0;                                                  //注意清空static变量状态
+        return tem;
     }
     public void dfs(int n, boolean[][] map, boolean[] col, boolean[] left, boolean[] right, int vol){
         if(vol == n){
