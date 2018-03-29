@@ -1,0 +1,84 @@
+You are given an integer array nums and you have to return a new counts array.
+The counts array has the property where counts[i] is the number of smaller elements to the right of nums[i].
+
+Example:
+Given nums = [5, 2, 6, 1]
+
+To the right of 5 there are 2 smaller elements (2 and 1).
+To the right of 2 there is only 1 smaller element (1).
+To the right of 6 there is 1 smaller element (1).
+To the right of 1 there is 0 smaller element.
+Return the array [2, 1, 1, 0].
+
+问题:
+找出每个位置右边有多少个数小于它
+
+
+思路：
+二叉搜索树，理想复杂度O(nlgn)
+
+For example, [3, 2, 2, 6, 1]:
+
+                 1(smaller: 0, count: 1)
+                     \
+                     6(3, 1)
+                     /
+                   2(0, 2)
+                       \
+                        3(0, 1)
+
+
+
+
+public class Solution {
+    public List<Integer> countSmaller(int[] nums) {
+        int len = nums.length;
+        if (nums == null || len == 0)
+            return new ArrayList<Integer>();
+        
+        Node root = new Node(nums[len-1]);
+        Integer[] res = new Integer[len];
+        res[len-1] = 0;
+        for (int i = len - 2; i >= 0; i--) {
+            Node current = root;
+            int smallCount = 0;
+            while (current != null) {
+                if (current.value > nums[i]) {
+                    current.smallCount += 1;
+                    if (current.left == null) {
+                        current.left = new Node(nums[i]);
+                        break;
+                    } else {
+                        current = current.left;
+                    }
+                } else if (current.value < nums[i]) {
+                    smallCount += (current.smallCount + current.samecount);
+                    if (current.right == null) {
+                        current.right = new Node(nums[i]);
+                        break;
+                    } else {
+                        current = current.right;
+                    }
+                } else {
+                    smallCount += current.smallCount;
+                    current.samecount += 1;
+                    break;
+                }
+            }
+            res[i] = smallCount;
+        }
+        
+        return Arrays.asList(res);
+    }
+}
+
+class Node {
+    Node left;
+    Node right;
+    int smallCount = 0;
+    int samecount = 1;
+    int value = 0;
+    public Node(int value) {
+        this.value = value;
+    }
+}
